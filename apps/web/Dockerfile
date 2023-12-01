@@ -9,7 +9,7 @@ ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 
 WORKDIR /app
 
-COPY . .
+COPY ./formbricks .
 RUN touch /app/apps/web/.env
 
 

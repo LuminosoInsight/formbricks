@@ -79,13 +79,13 @@ x-cron-secret: &cron_secret
 x-asset-prefix-url: &asset_prefix_url
 
 services:
-  postgres:
-    restart: always
-    image: postgres:15-alpine
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=postgres
+  #postgres:
+  #  restart: always
+  #  image: postgres:15-alpine
+  #  volumes:
+  #    - postgres:/var/lib/postgresql/data
+  #  environment:
+  #    - POSTGRES_PASSWORD=postgres
 
   formbricks:
     restart: always
@@ -93,17 +93,20 @@ services:
       context: .
       dockerfile: ./apps/web/Dockerfile
       args:
-        DATABASE_URL: *database_url
+        #DATABASE_URL: *database_url
+        DATABASE_URL: ${DB_CONNECTION_STRING}
+
         NEXTAUTH_SECRET: *nextauth_secret
     
-    depends_on:
-      - postgres
+    #depends_on:
+    #  - postgres
     ports:
       - 3000:3000
 
     environment:
       WEBAPP_URL: *webapp_url
-      DATABASE_URL: *database_url
+      #DATABASE_URL: *database_url
+      DATABASE_URL: ${DB_CONNECTION_STRING}
       NEXTAUTH_SECRET: *nextauth_secret
       NEXTAUTH_URL: *nextauth_url
       MAIL_FROM: *mail_from
@@ -112,7 +115,8 @@ services:
       SMTP_SECURE_ENABLED: *smtp_secure_enabled
       SMTP_USER: *smtp_user
       SMTP_PASSWORD: *smtp_password
-      FORMBRICKS_ENCRYPTION_KEY: *formbricks_encryption_key
+      #FORMBRICKS_ENCRYPTION_KEY: *formbricks_encryption_key
+      FORMBRICKS_ENCRYPTION_KEY: ${FORMBRICKS_ENCRYPTION_KEY}
       SURVEY_BASE_URL: *survey_base_url
       SHORT_SURVEY_BASE_URL: *short_survey_base_url
       PRIVACY_URL: *privacy_url
@@ -133,6 +137,6 @@ services:
       CRON_SECRET: *cron_secret
       ASSET_PREFIX_URL: *asset_prefix_url
 
-volumes:
-  postgres:
-    driver: local
+#volumes:
+  #postgres:
+  #  driver: local
