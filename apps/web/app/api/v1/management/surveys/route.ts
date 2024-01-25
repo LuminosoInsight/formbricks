@@ -8,9 +8,14 @@ import { DatabaseError } from "@formbricks/types/v1/errors";
 
 export async function GET(request: Request) {
   try {
+    const requestUrl = request.url;
+    const url = new URL(requestUrl);
+    const searchParams = new URLSearchParams(url.search);
+    const page = searchParams.get("page");
+
     const authentication = await authenticateRequest(request);
     if (!authentication) return responses.notAuthenticatedResponse();
-    const surveys = await getSurveys(authentication.environmentId!);
+    const surveys = await getSurveys(authentication.environmentId!, page);
     return responses.successResponse(surveys);
   } catch (error) {
     if (error instanceof DatabaseError) {

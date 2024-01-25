@@ -63,6 +63,7 @@
     "@types/bcryptjs": "^2.4.4",
     "@types/lodash": "^4.14.199",
     "@types/markdown-it": "^13.0.2",
-    "eslint-config-formbricks": "workspace:*"
+    "eslint-config-formbricks": "workspace:*",
+    "dotenv": "^16.4.1"
   }
 }

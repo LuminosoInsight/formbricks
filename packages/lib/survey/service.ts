@@ -30,6 +30,7 @@ const getSurveysCacheTag = (environmentId: string): string => `environments-${en
 export const getSurveyCacheTag = (surveyId: string): string => `surveys-${surveyId}`;
 
 export const selectSurvey = {
+  projects: true,
   id: true,
   createdAt: true,
   updatedAt: true,
@@ -237,6 +238,75 @@ export const getSurvey = async (surveyId: string): Promise<TSurvey | null> => {
   };
 };
 
+export const getSurveyByProjectId = async (projectId: string): Promise<TSurvey | null> => {
+  let surveyId;
+  const survey = await unstable_cache(
+    async () => {
+      validateInputs([projectId, ZId]);
+      let surveyPrisma;
+      try {
+        surveyPrisma = await prisma.survey.findFirst({
+          where: {
+            projects: {
+              has: projectId,
+            },
+          },
+          select: selectSurvey,
+        });
+
+        surveyId = surveyPrisma?.id;
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new DatabaseError("Database operation failed");
+        }
+
+        throw error;
+      }
+
+      if (!surveyPrisma) {
+        return null;
+      }
+
+      const transformedSurvey = {
+        ...surveyPrisma,
+        triggers: surveyPrisma.triggers.map((trigger) => trigger.eventClass.name),
+      };
+
+      try {
+        const survey = ZSurvey.parse(transformedSurvey);
+        return survey;
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+        if (error instanceof z.ZodError) {
+          console.error(JSON.stringify(error.errors, null, 2)); // log the detailed error information
+        }
+        throw new ValidationError("Data validation of survey failed");
+      }
+    },
+    [`surveys-${surveyId}`],
+    {
+      tags: [getSurveyCacheTag(surveyId!)],
+      revalidate: SERVICES_REVALIDATION_INTERVAL,
+    }
+  )();
+
+  if (!survey) {
+    return null;
+  }
+
+  // since the unstable_cache function does not support deserialization of dates, we need to manually deserialize them
+  // https://github.com/vercel/next.js/issues/51613
+  return {
+    ...survey,
+    ...formatSurveyDateFields(survey),
+  };
+};
+
 export const getSurveysByAttributeClassId = async (attributeClassId: string): Promise<TSurvey[]> => {
   const surveysPrisma = await prisma.survey.findMany({
     where: {
@@ -309,7 +379,7 @@ export const getSurveysByActionClassId = async (actionClassId: string): Promise<
   }
 };
 
-export const getSurveys = async (environmentId: string): Promise<TSurvey[]> => {
+export const getSurveys = async (environmentId: string, page: string | null): Promise<TSurvey[]> => {
   const surveys = await unstable_cache(
     async () => {
       validateInputs([environmentId, ZId]);
@@ -318,6 +388,152 @@ export const getSurveys = async (environmentId: string): Promise<TSurvey[]> => {
         surveysPrisma = await prisma.survey.findMany({
           where: {
             environmentId,
+          },
+          skip: page ? (+page - 1) * 10 : 0,
+          take: page ? 10 : undefined,
+          select: selectSurvey,
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          throw new DatabaseError("Database operation failed");
+        }
+
+        throw error;
+      }
+
+      const surveys: TSurvey[] = [];
+
+      try {
+        for (const surveyPrisma of surveysPrisma) {
+          const transformedSurvey = {
+            ...surveyPrisma,
+            triggers: surveyPrisma.triggers.map((trigger) => trigger.eventClass.name),
+          };
+          const survey = ZSurvey.parse(transformedSurvey);
+          surveys.push(survey);
+        }
+        return surveys;
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+        if (error instanceof z.ZodError) {
+          console.error(JSON.stringify(error.errors, null, 2)); // log the detailed error information
+        }
+        throw new ValidationError("Data validation of survey failed");
+      }
+    },
+    [`environments-${environmentId}-surveys`],
+    {
+      tags: [getSurveysCacheTag(environmentId)],
+      revalidate: SERVICES_REVALIDATION_INTERVAL,
+    }
+  )();
+
+  // since the unstable_cache function does not support deserialization of dates, we need to manually deserialize them
+  // https://github.com/vercel/next.js/issues/51613
+  return surveys.map((survey) => ({
+    ...survey,
+    ...formatSurveyDateFields(survey),
+  }));
+};
+
+// export const getSurveys = async (environmentId: string, page: string | null): Promise<{data: TSurvey[], meta: {
+//   total: number;
+//   lastPage: number;
+//   perPage: number;
+//   page: number;
+// }}> => {
+//   if (page) revalidateTag(getSurveysCacheTag(environmentId))
+//   let surveysPrisma: { meta: any, data: TSurvey[] } = {meta: undefined, data: []};
+//   const surveys = await unstable_cache(
+//     async () => {
+//       validateInputs([environmentId, ZId]);
+//       try {
+//         const args = {
+//           where: {
+//             environmentId,
+//           },
+//           orderBy: {
+//             createdAt: 'desc',
+//           },
+//           select: selectSurvey,
+//         };
+//         const model = prisma.survey;
+//         const pagination = {
+//           page: page ? +page : 1,
+//           perPage: 10
+//         }
+//         surveysPrisma = await getPaginatedPrismaResult(pagination, {model, args})
+//       } catch (error) {
+//         if (error instanceof Error) {
+//           console.error(error.message);
+//         }
+//         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+//           throw new DatabaseError("Database operation failed");
+//         }
+
+//         throw error;
+//       }
+
+//       const surveys: TSurvey[] = [];
+
+//       try {
+//         for (const surveyPrisma of surveysPrisma.data) {
+//           const transformedSurvey = {
+//             ...surveyPrisma,
+//             triggers: surveyPrisma.triggers.map((trigger) => trigger.eventClass.name),
+//           };
+//           const survey = ZSurvey.parse(transformedSurvey);
+//           surveys.push(survey);
+//         }
+//         return surveys;
+//       } catch (error) {
+//         if (error instanceof Error) {
+//           console.error(error.message);
+//         }
+//         if (error instanceof z.ZodError) {
+//           console.error(JSON.stringify(error.errors, null, 2)); // log the detailed error information
+//         }
+//         throw new ValidationError("Data validation of survey failed");
+//       }
+//     },
+//     [`environments-${environmentId}-surveys`],
+//     {
+//       tags: [getSurveysCacheTag(environmentId)],
+//       revalidate: SERVICES_REVALIDATION_INTERVAL,
+//     }
+//   )();
+
+// // since the unstable_cache function does not support deserialization of dates, we need to manually deserialize them
+// // https://github.com/vercel/next.js/issues/51613
+//   return {
+//       meta: surveysPrisma.meta,
+//       data: surveys.map((survey) => ({
+//       ...survey,
+//       ...formatSurveyDateFields(survey),
+//     }))
+//   };
+// };
+
+export const getSurveysByProjectId = async (environmentId: string, projectId: string): Promise<TSurvey[]> => {
+  const surveys = await unstable_cache(
+    async () => {
+      validateInputs([environmentId, ZId]);
+      let surveysPrisma;
+      try {
+        surveysPrisma = await prisma.survey.findMany({
+          where: {
+            environmentId,
+            projects: {
+              has: projectId,
+            },
           },
           select: selectSurvey,
         });

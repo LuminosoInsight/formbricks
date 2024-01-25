@@ -264,7 +264,15 @@ export const getSurveyResponses = async (surveyId: string, page?: number): Promi
       skip: page ? ITEMS_PER_PAGE * (page - 1) : undefined,
     });
 
-    const transformedResponses: TResponse[] = responses.map((responsePrisma) => ({
+    const responsesWithoutInputType: TResponse[] = responses.map((item) => {
+      if ("inputType" in item.data) {
+        delete item.data.inputType;
+      }
+
+      return item;
+    });
+
+    const transformedResponses: TResponse[] = responsesWithoutInputType.map((responsePrisma) => ({
       ...responsePrisma,
       person: responsePrisma.person ? transformPrismaPerson(responsePrisma.person) : null,
       tags: responsePrisma.tags.map((tagPrisma: { tag: TTag }) => tagPrisma.tag),

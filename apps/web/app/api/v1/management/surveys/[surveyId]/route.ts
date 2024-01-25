@@ -6,7 +6,10 @@ import { transformErrorToDetails } from "@/lib/api/validator";
 import { authenticateRequest } from "@/app/api/v1/auth";
 import { handleErrorResponse } from "@/app/api/v1/auth";
 
-async function fetchAndAuthorizeSurvey(authentication: any, surveyId: string): Promise<TSurvey | null> {
+export async function fetchAndAuthorizeSurvey(
+  authentication: any,
+  surveyId: string
+): Promise<TSurvey | null> {
   const survey = await getSurvey(surveyId);
   if (!survey) {
     return null;
@@ -64,7 +67,8 @@ export async function PUT(
       return responses.notFoundResponse("Survey", params.surveyId);
     }
     const surveyUpdate = await request.json();
-    const inputValidation = ZSurvey.safeParse(surveyUpdate);
+    const surveyData = { ...survey, ...surveyUpdate };
+    const inputValidation = ZSurvey.safeParse(surveyData);
     if (!inputValidation.success) {
       return responses.badRequestResponse(
         "Fields are missing or incorrectly formatted",
