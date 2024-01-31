@@ -10,7 +10,7 @@ ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 WORKDIR /app
 
 COPY . .
-RUN touch /app/apps/web/.env
+RUN touch /apps/web/.env
 
 
 RUN pnpm install
