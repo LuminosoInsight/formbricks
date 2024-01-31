@@ -1,0 +1,66 @@
+name: dev-formbricks-pipeline
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: dev-formbricks-ecr
+  ECS_CLUSTER: dev-lumi-cluster
+  ECS_SERVICE: dev-formbricks
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TIME_ZONE: Europe/London
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.branch_check.outputs.branch_short_name }}
+    steps:
+      - name: Branch check
+        id: branch_check
+        run: echo "::set-output name=branch_short_name::$(echo $GITHUB_REF | cut -d'/' -f 3)"
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.branch == 'main' }}
+    outputs:
+      builder_type: ${{ steps.set_variable.outputs.builder_type }}
+    env:
+      BRANCH_SHORT_NAME: ${{ needs.prepare.outputs.branch }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to AWS ECR
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to AWS ECR
+        id: build_image
+        env:
+          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+        run: |
+          cd serv/formbricks/apps/web
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest --build-arg ENVIRONMENT=dev  . --no-cache
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
+          docker rmi $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.branch == 'main' }}
+
+    steps:
+      - name: Update ECS Service
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment --region ${{ env.AWS_REGION }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
