@@ -91,7 +91,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./apps/web/Dockerfile
+      dockerfile: .
       args:
         #DATABASE_URL: *database_url
         DATABASE_URL: ${DB_CONNECTION_STRING}
