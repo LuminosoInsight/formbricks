@@ -24,7 +24,7 @@ jobs:
   build:
     needs: prepare
     runs-on: ubuntu-latest
-    if: ${{ needs.prepare.outputs.branch == 'main' }}
+    if: ${{ needs.prepare.outputs.branch == 'main' || needs.prepare.outputs.branch == 'devops'}}
     outputs:
       builder_type: ${{ steps.set_variable.outputs.builder_type }}
     env:
@@ -39,7 +39,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-
+      - name: Retrieve environment variables from Secrets Manager
+        run: |
+          aws secretsmanager get-secret-value --secret-id ${{env.SECRET_NAME}} --region ${{ env.AWS_REGION }} --query 'SecretString' --output json | jq -r '. | if type=="string" then fromjson else . end | to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
+    
       - name: Login to AWS ECR
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -53,14 +56,13 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
         run: |
-          cd apps/web
-          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest --build-arg ENVIRONMENT=dev  . --no-cache
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest  . --no-cache
           docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
           docker rmi $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ needs.prepare.outputs.branch == 'main' }}
+    if: ${{ needs.prepare.outputs.branch == 'main' || needs.prepare.outputs.branch == 'devops'}}
 
     steps:
       - name: Update ECS Service

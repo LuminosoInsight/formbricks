@@ -1,11 +1,11 @@
 FROM node:18-alpine AS installer
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+# ARG DATABASE_URL
+# ENV DATABASE_URL=$DATABASE_URL
 
-ARG NEXTAUTH_SECRET
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+# ARG NEXTAUTH_SECRET
+# ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 
 WORKDIR /app
 
@@ -13,10 +13,9 @@ COPY . .
 RUN pwd
 RUN ls -la
 RUN touch ./apps/web/.env
-
-
+RUN cp .env ./apps/web/.env
+#COPY .env .env
 RUN pnpm install
-
 # Build the project
 RUN pnpm post-install --filter=web...
 RUN pnpm turbo run build --filter=web...
