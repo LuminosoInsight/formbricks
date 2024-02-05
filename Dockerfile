@@ -1,8 +1,8 @@
 FROM node:18-alpine AS installer
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# ARG DATABASE_URL
-# ENV DATABASE_URL=$DATABASE_URL
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 
 # ARG NEXTAUTH_SECRET
 # ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
@@ -46,11 +46,6 @@ EXPOSE 3000
 
 ENV HOSTNAME "0.0.0.0"
 
-CMD if [ "$NEXTAUTH_SECRET" != "RANDOM_STRING" ]; then \
-        pnpm dlx prisma migrate deploy && \
+CMD pnpm dlx prisma migrate deploy && \
         node apps/web/pre-setup-server.js; \
-        node apps/web/server.js; \      
-    else \
-        echo "ERROR: Please set a value for NEXTAUTH_SECRET in your docker compose variables!"; \
-        exit 1; \
-    fi
+        node apps/web/server.js; 
