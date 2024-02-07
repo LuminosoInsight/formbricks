@@ -48,4 +48,4 @@ ENV HOSTNAME "0.0.0.0"
 
 CMD pnpm dlx prisma migrate deploy && \
         node apps/web/pre-setup-server.js; \
-        node apps/web/server.js; 
+        node apps/web/server.js; docker
