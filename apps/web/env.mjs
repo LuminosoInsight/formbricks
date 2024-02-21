@@ -58,6 +58,8 @@ export const env = createEnv({
     AWS_SECRET_KEY: z.string().optional(),
     S3_REGION: z.string().optional(),
     S3_BUCKET_NAME: z.string().optional(),
+    LUMI_API_URL: z.string().optional(),
+    FORMBRICKS_PASSWORD: z.string().optional(),
   },
 
   /*
@@ -125,10 +127,11 @@ export const env = createEnv({
     IS_FORMBRICKS_CLOUD: process.env.IS_FORMBRICKS_CLOUD,
     NEXT_PUBLIC_POSTHOG_API_KEY: process.env.NEXT_PUBLIC_POSTHOG_API_KEY,
     NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
-    FORMBRICKS_ENCRYPTION_KEY: process.env.FORMBRICKS_ENCRYPTION_KEY,
     VERCEL_URL: process.env.VERCEL_URL,
     SURVEY_BASE_URL: process.env.SURVEY_BASE_URL,
     SHORT_SURVEY_BASE_URL: process.env.SHORT_SURVEY_BASE_URL,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    LUMI_API_URL: process.env.LUMI_API_URL,
+    FORMBRICKS_PASSWORD: process.env.FORMBRICKS_PASSWORD,
   },
 });
