@@ -59,5 +59,8 @@ export const NEXTAUTH_SECRET = env.NEXTAUTH_SECRET;
 export const NEXTAUTH_URL = env.NEXTAUTH_URL;
 export const ITEMS_PER_PAGE = 50;
 
+export const LUMI_API_URL = env.LUMI_API_URL;
+export const FORMBRICKS_PASSWORD = env.FORMBRICKS_PASSWORD;
+
 // Storage constants
 export const UPLOADS_DIR = path.resolve("./uploads");

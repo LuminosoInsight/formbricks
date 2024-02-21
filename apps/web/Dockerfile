@@ -47,7 +47,6 @@ ENV HOSTNAME "0.0.0.0"
 
 CMD if [ "$NEXTAUTH_SECRET" != "RANDOM_STRING" ]; then \
         pnpm dlx prisma migrate deploy && \
-        node apps/web/pre-setup-server.js; \
         node apps/web/server.js; \      
     else \
         echo "ERROR: Please set a value for NEXTAUTH_SECRET in your docker compose variables!"; \

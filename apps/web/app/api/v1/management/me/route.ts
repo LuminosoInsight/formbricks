@@ -1,54 +1,33 @@
-import { getSessionUser, hashApiKey } from "@/lib/api/apiHelper";
 import { prisma } from "@formbricks/database";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { authenticateRequest } from "@/app/api/v1/auth";
+import { responses } from "@/lib/api/response";
 
-export async function GET() {
-  const headersList = headers();
-  const apiKey = headersList.get("x-api-key");
-  if (apiKey) {
-    const apiKeyData = await prisma.apiKey.findUnique({
-      where: {
-        hashedKey: hashApiKey(apiKey),
-      },
-      select: {
-        environment: {
-          select: {
-            id: true,
-            createdAt: true,
-            updatedAt: true,
-            type: true,
-            product: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            widgetSetupCompleted: true,
-          },
+export async function GET(request: Request) {
+  const authentication = await authenticateRequest(request);
+  if (!authentication) return responses.notAuthenticatedResponse();
+  const environment = await prisma.environment.findUnique({
+    where: {
+      id: authentication.environmentId,
+    },
+    select: {
+      id: true,
+      createdAt: true,
+      updatedAt: true,
+      type: true,
+      product: {
+        select: {
+          id: true,
+          name: true,
         },
       },
+      widgetSetupCompleted: true,
+    },
+  });
+  if (!environment) {
+    return new Response("Not authenticated", {
+      status: 401,
     });
-    if (!apiKeyData) {
-      return new Response("Not authenticated", {
-        status: 401,
-      });
-    }
-    return NextResponse.json(apiKeyData.environment);
-  } else {
-    const sessionUser = await getSessionUser();
-    if (!sessionUser) {
-      return new Response("Not authenticated", {
-        status: 401,
-      });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        email: sessionUser.email,
-      },
-    });
-
-    return NextResponse.json(user);
   }
+  return NextResponse.json(environment);
 }

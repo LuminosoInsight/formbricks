@@ -4,11 +4,13 @@ export const createUser = async (
   name: string,
   email: string,
   password: string,
-  inviteToken?: string | null
+  inviteToken?: string | null,
+  webAppUrl?: string
 ): Promise<any> => {
   const hashedPassword = await hashPassword(password);
   try {
-    const res = await fetch(`/api/v1/users`, {
+    const fetchUrl = webAppUrl ? `${webAppUrl}/api/v1/users` : `/api/v1/users`;
+    const res = await fetch(fetchUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
