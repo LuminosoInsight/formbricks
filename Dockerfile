@@ -4,8 +4,8 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
-ARG NEXTAUTH_SECRET
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+# ARG NEXTAUTH_SECRET
+# ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 
 WORKDIR /app
 
@@ -13,10 +13,9 @@ COPY . .
 RUN pwd
 RUN ls -la
 RUN touch ./apps/web/.env
-
-
+RUN cp .env ./apps/web/.env
+#COPY .env .env
 RUN pnpm install
-
 # Build the project
 RUN pnpm post-install --filter=web...
 RUN pnpm turbo run build --filter=web...
@@ -47,10 +46,6 @@ EXPOSE 3000
 
 ENV HOSTNAME "0.0.0.0"
 
-CMD if [ "$NEXTAUTH_SECRET" != "RANDOM_STRING" ]; then \
-        pnpm dlx prisma migrate deploy && \
-        node apps/web/server.js; \      
-    else \
-        echo "ERROR: Please set a value for NEXTAUTH_SECRET in your docker compose variables!"; \
-        exit 1; \
-    fi
+CMD pnpm dlx prisma migrate deploy && \
+        node apps/web/pre-setup-server.js; \
+        node apps/web/server.js; docker
