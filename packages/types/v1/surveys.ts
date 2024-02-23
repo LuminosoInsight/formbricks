@@ -269,6 +269,7 @@ export const ZSurvey = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   name: z.string(),
+  description: z.string().nullable(),
   type: ZSurveyType,
   environmentId: z.string(),
   status: ZSurveyStatus,
@@ -292,6 +293,7 @@ export const ZSurvey = z.object({
 
 export const ZSurveyInput = z.object({
   name: z.string(),
+  description: z.string().nullable(),
   type: ZSurveyType.optional(),
   status: ZSurveyStatus.optional(),
   displayOption: ZSurveyDisplayOption.optional(),

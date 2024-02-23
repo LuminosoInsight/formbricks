@@ -4,15 +4,17 @@ import { evaluateCondition } from "../lib/logicEvaluator";
 import { cn } from "../lib/utils";
 import { SurveyBaseProps } from "../types/props";
 import { AutoCloseWrapper } from "./AutoCloseWrapper";
-import FormbricksSignature from "./FormbricksSignature";
+// import FormbricksSignature from "./FormbricksSignature";
 import ProgressBar from "./ProgressBar";
 import QuestionConditional from "./QuestionConditional";
 import ThankYouCard from "./ThankYouCard";
+import SurveyHeadline from "./SurveyHeadline";
+import Subheader from "./Subheader";
 
 export function Survey({
   survey,
   brandColor,
-  formbricksSignature,
+  // formbricksSignature,
   activeQuestionId,
   onDisplay = () => {},
   onActiveQuestionChange = () => {},
@@ -118,30 +120,37 @@ export function Survey({
                 isRedirectDisabled={isRedirectDisabled}
               />
             ) : (
-              survey.questions.map(
-                (question, idx) =>
-                  questionId === question.id && (
-                    <QuestionConditional
-                      question={question}
-                      value={responseData[question.id]}
-                      onChange={onChange}
-                      onSubmit={onSubmit}
-                      onBack={onBack}
-                      isFirstQuestion={
-                        // if prefillResponseData is provided, check if we're on the first "real" question
-                        history && prefillResponseData
-                          ? history[history.length - 1] === survey.questions[0].id
-                          : idx === 0
-                      }
-                      isLastQuestion={idx === survey.questions.length - 1}
-                      brandColor={brandColor}
-                    />
-                  )
-              )
+              <>
+                <SurveyHeadline surveyId={survey.id} headline={survey.name} />
+                {survey?.description && <Subheader questionId={survey.id} subheader={survey?.description} />}
+                <div className="mt-5 h-[2px] w-full rounded-full bg-[#0396c2]"></div>
+                <div className="mt-[100px]">
+                  {survey.questions.map(
+                    (question, idx) =>
+                      questionId === question.id && (
+                        <QuestionConditional
+                          question={question}
+                          value={responseData[question.id]}
+                          onChange={onChange}
+                          onSubmit={onSubmit}
+                          onBack={onBack}
+                          isFirstQuestion={
+                            // if prefillResponseData is provided, check if we're on the first "real" question
+                            history && prefillResponseData
+                              ? history[history.length - 1] === survey.questions[0].id
+                              : idx === 0
+                          }
+                          isLastQuestion={idx === survey.questions.length - 1}
+                          brandColor={brandColor}
+                        />
+                      )
+                  )}
+                </div>
+              </>
             )}
           </div>
           <div className="mt-8">
-            {formbricksSignature && <FormbricksSignature />}
+            {/* {formbricksSignature && <FormbricksSignature />} */}
             <ProgressBar survey={survey} questionId={questionId} brandColor={brandColor} />
           </div>
         </div>

@@ -226,6 +226,7 @@ model Survey {
   createdAt           DateTime                @default(now()) @map(name: "created_at")
   updatedAt           DateTime                @updatedAt @map(name: "updated_at")
   name                String
+  description         String?
   projects            String[]                @default([])
   redirectUrl         String?
   type                SurveyType              @default(web)
@@ -367,7 +368,7 @@ model Product {
   team                 Team            @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId               String
   environments         Environment[]
-  brandColor           String          @default("#64748b")
+  brandColor           String          @default("#0396C2")
   highlightBorderColor String?
   recontactDays        Int             @default(7)
   formbricksSignature  Boolean         @default(true)
@@ -504,7 +505,7 @@ model User {
   twoFactorEnabled          Boolean          @default(false)
   backupCodes               String?
   password                  String?
-  onboardingCompleted       Boolean          @default(false)
+  onboardingCompleted       Boolean          @default(true)
   identityProvider          IdentityProvider @default(email)
   identityProviderAccountId String?
   memberships               Membership[]
