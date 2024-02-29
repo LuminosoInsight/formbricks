@@ -159,6 +159,7 @@ const ZSurveyQuestionBase = z.object({
   range: z.union([z.literal(5), z.literal(3), z.literal(4), z.literal(7), z.literal(10)]).optional(),
   logic: z.array(ZSurveyLogic).optional(),
   isDraft: z.boolean().optional(),
+  image: z.string().nullable().optional(),
 });
 
 export const ZSurveyOpenTextQuestionInputType = z.enum(["text", "email", "url", "number", "phone"]);
@@ -270,6 +271,7 @@ export const ZSurvey = z.object({
   updatedAt: z.date(),
   name: z.string(),
   description: z.string().nullable(),
+  image: z.string().nullable().optional(),
   type: ZSurveyType,
   environmentId: z.string(),
   status: ZSurveyStatus,
@@ -293,8 +295,9 @@ export const ZSurvey = z.object({
 
 export const ZSurveyInput = z.object({
   name: z.string(),
-  description: z.string().nullable(),
+  description: z.string().nullable().optional(),
   type: ZSurveyType.optional(),
+  image: z.string().nullable().optional(),
   status: ZSurveyStatus.optional(),
   displayOption: ZSurveyDisplayOption.optional(),
   autoClose: z.number().optional(),
@@ -309,7 +312,7 @@ export const ZSurveyInput = z.object({
   verifyEmail: ZSurveyVerifyEmail.optional(),
   attributeFilters: z.array(ZSurveyAttributeFilter).optional(),
   triggers: z.array(z.string()).optional(),
-  projects: z.array(z.string()).nullable(),
+  projects: z.array(z.string()).nullable().optional(),
 });
 
 export type TSurvey = z.infer<typeof ZSurvey>;

@@ -35,6 +35,7 @@ export const selectSurvey = {
   createdAt: true,
   updatedAt: true,
   name: true,
+  image: true,
   description: true,
   type: true,
   environmentId: true,

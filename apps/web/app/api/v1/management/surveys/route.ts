@@ -43,7 +43,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     const environmentId = authentication.environmentId;
     const surveyData = { ...inputValidation.data, environmentId: undefined };
 
-    const survey = await createSurvey(environmentId, surveyData);
+    const survey = await createSurvey(environmentId, { ...surveyData });
     return responses.successResponse(survey);
   } catch (error) {
     if (error instanceof DatabaseError) {

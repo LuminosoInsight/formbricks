@@ -1,60 +1,60 @@
 import { responses } from "@/lib/api/response";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { env } from "@/env.mjs";
 import { putFileToLocalStorage, putFileToS3 } from "@formbricks/lib/storage/service";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { UPLOADS_DIR, WEBAPP_URL } from "@formbricks/lib/constants";
-import { hasUserEnvironmentAccess } from "@formbricks/lib/environment/auth";
+// import { hasUserEnvironmentAccess } from "@formbricks/lib/environment/auth";
+import { authenticateRequest } from "@/app/api/v1/auth";
 
 // api endpoint for uploading public files
 // uploaded files will be public, anyone can access the file
 // uploading public files requires authentication
 // use this to upload files for a specific resource, e.g. a user profile picture or a survey
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-  const accessType = "public"; // public files are accessible by anyone
-  const { fileName, contentType, environmentId, fileBuffer, allowedFileExtensions } = await req.json();
+export async function GET(request: Request) {}
 
-  if (!fileName) {
-    return responses.badRequestResponse("fileName is required");
-  }
+export async function POST(request: Request): Promise<NextResponse> {
+  try {
+    const authentication = await authenticateRequest(request);
+    if (!authentication) return responses.notAuthenticatedResponse();
+    const accessType = "public"; // public files are accessible by anyone
+    const { fileName, contentType, environmentId, fileBuffer, allowedFileExtensions } = await request.json();
 
-  if (!contentType) {
-    return responses.badRequestResponse("contentType is required");
-  }
-
-  if (!fileBuffer) {
-    return responses.badRequestResponse("no file provided, fileBuffer is required");
-  }
-
-  if (!environmentId) {
-    return responses.badRequestResponse("environmentId is required");
-  }
-
-  if (allowedFileExtensions?.length) {
-    const fileExtension = fileName.split(".").pop();
-    if (!fileExtension || !allowedFileExtensions.includes(fileExtension)) {
-      return responses.badRequestResponse(
-        `File extension is not allowed, allowed extensions are: ${allowedFileExtensions.join(", ")}`
-      );
+    if (!fileName) {
+      return responses.badRequestResponse("fileName is required");
     }
+
+    // if (!contentType) {
+    //   return responses.badRequestResponse("contentType is required");
+    // }
+
+    if (!fileBuffer) {
+      return responses.badRequestResponse("no file provided, fileBuffer is required");
+    }
+
+    if (!environmentId) {
+      return responses.badRequestResponse("environmentId is required");
+    }
+
+    if (allowedFileExtensions?.length) {
+      const fileExtension = fileName.split(".").pop();
+      if (!fileExtension || !allowedFileExtensions.includes(fileExtension)) {
+        return responses.badRequestResponse(
+          `File extension is not allowed, allowed extensions are: ${allowedFileExtensions.join(", ")}`
+        );
+      }
+    }
+
+    return await uploadPublicFile(
+      fileName,
+      fileBuffer,
+      accessType,
+      authentication.environmentId,
+      contentType
+    );
+  } catch (e) {
+    throw e;
   }
-
-  // auth and upload private file
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user) {
-    return responses.notAuthenticatedResponse();
-  }
-
-  const isUserAuthorized = await hasUserEnvironmentAccess(session.user.id, environmentId);
-
-  if (!isUserAuthorized) {
-    return responses.unauthorizedResponse();
-  }
-
-  return await uploadPublicFile(fileName, fileBuffer, accessType, environmentId, contentType);
 }
 
 const uploadPublicFile = async (
