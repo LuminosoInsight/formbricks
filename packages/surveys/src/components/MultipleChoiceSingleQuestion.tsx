@@ -6,6 +6,7 @@ import { BackButton } from "./BackButton";
 import Headline from "./Headline";
 import Subheader from "./Subheader";
 import SubmitButton from "./SubmitButton";
+import SurveyImage from "./SurveyImage.tsx";
 
 interface MultipleChoiceSingleProps {
   question: TSurveyMultipleChoiceSingleQuestion;
@@ -64,6 +65,7 @@ export default function MultipleChoiceSingleQuestion({
       className="w-full">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
+      {question?.image && <SurveyImage image={question.image} />}
       <div className="mt-4">
         <fieldset>
           <legend className="sr-only">Options</legend>

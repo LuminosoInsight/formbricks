@@ -5,6 +5,7 @@ import Headline from "./Headline";
 import Subheader from "./Subheader";
 import SubmitButton from "./SubmitButton";
 import { useCallback } from "react";
+import SurveyImage from "./SurveyImage.tsx";
 
 interface OpenTextQuestionProps {
   question: TSurveyOpenTextQuestion;
@@ -51,6 +52,7 @@ export default function OpenTextQuestion({
       className="w-full">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
+      {question?.image && <SurveyImage image={question.image} />}
       <div className="mt-4">
         {question.longAnswer === false ? (
           <input

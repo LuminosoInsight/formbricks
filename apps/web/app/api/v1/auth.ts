@@ -72,7 +72,9 @@ export async function authenticateRequest(request: Request): Promise<TAuthentica
     if (existedUser) {
       return {
         type: "apiKey",
-        environmentId: existedUser?.memberships[0].team.products[0].environments[0].id,
+        environmentId: existedUser?.memberships[0].team.products[0].environments.find(
+          (item: Record<string, string>) => item.type === "production"
+        ).id,
       };
     }
     return null;

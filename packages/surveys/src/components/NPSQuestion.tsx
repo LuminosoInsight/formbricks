@@ -5,6 +5,7 @@ import { BackButton } from "./BackButton";
 import Headline from "./Headline";
 import Subheader from "./Subheader";
 import SubmitButton from "./SubmitButton";
+import SurveyImage from "./SurveyImage.tsx";
 
 interface NPSQuestionProps {
   question: TSurveyNPSQuestion;
@@ -35,6 +36,7 @@ export default function NPSQuestion({
       }}>
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
+      {question?.image && <SurveyImage image={question.image} />}
       <div className="my-4">
         <fieldset>
           <legend className="sr-only">Options</legend>

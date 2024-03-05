@@ -4,6 +4,7 @@ import { BackButton } from "./BackButton";
 import Headline from "./Headline";
 import HtmlBody from "./HtmlBody";
 import SubmitButton from "./SubmitButton";
+import SurveyImage from "./SurveyImage.tsx";
 
 interface CTAQuestionProps {
   question: TSurveyCTAQuestion;
@@ -27,6 +28,7 @@ export default function CTAQuestion({
   return (
     <div>
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
+      {question?.image && <SurveyImage image={question.image} />}
       <HtmlBody htmlString={question.html} questionId={question.id} />
 
       <div className="mt-4 flex w-full justify-between">

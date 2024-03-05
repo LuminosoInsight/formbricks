@@ -18,6 +18,7 @@ import {
 } from "./Smileys";
 import Subheader from "./Subheader";
 import SubmitButton from "./SubmitButton";
+import SurveyImage from "./SurveyImage.tsx";
 
 interface RatingQuestionProps {
   question: TSurveyRatingQuestion;
@@ -72,6 +73,7 @@ export default function RatingQuestion({
       className="w-full">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
+      {question?.image && <SurveyImage image={question.image} />}
       <div className="my-4">
         <fieldset>
           <legend className="sr-only">Choices</legend>
