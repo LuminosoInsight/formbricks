@@ -28,23 +28,24 @@ export default function ConsentQuestion({
   brandColor,
 }: ConsentQuestionProps) {
   return (
-    <div>
+    <div className="rounded-md bg-white p-7 shadow-sm">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       {question?.image && <SurveyImage image={question.image} />}
       <HtmlBody htmlString={question.html || ""} questionId={question.id} />
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit({ [question.id]: value });
-        }}>
+      <div
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   onSubmit({ [question.id]: value });
+      // }}
+      >
         <label
           tabIndex={1}
-          onKeyDown={(e) => {
-            if (e.key == "Enter") {
-              onChange({ [question.id]: "accepted" });
-            }
-          }}
+          // onKeyDown={(e) => {
+          //   if (e.key == "Enter") {
+          //     onChange({ [question.id]: "accepted" });
+          //   }
+          // }}
           className="relative z-10 mt-4 flex w-full cursor-pointer items-center rounded-md border border-gray-200 p-4 text-sm text-slate-800 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
           <input
             type="checkbox"
@@ -69,20 +70,20 @@ export default function ConsentQuestion({
           </span>
         </label>
 
-        <div className="mt-4 flex w-full justify-between">
-          {!isFirstQuestion && (
-            <BackButton tabIndex={3} backButtonLabel={question.backButtonLabel} onClick={() => onBack()} />
-          )}
-          <div />
-          <SubmitButton
-            tabIndex={2}
-            brandColor={brandColor}
-            question={question}
-            isLastQuestion={isLastQuestion}
-            onClick={() => {}}
-          />
-        </div>
-      </form>
+        {/*<div className="mt-4 flex w-full justify-between">*/}
+        {/*  {!isFirstQuestion && (*/}
+        {/*    <BackButton tabIndex={3} backButtonLabel={question.backButtonLabel} onClick={() => onBack()} />*/}
+        {/*  )}*/}
+        {/*  <div />*/}
+        {/*  <SubmitButton*/}
+        {/*    tabIndex={2}*/}
+        {/*    brandColor={brandColor}*/}
+        {/*    question={question}*/}
+        {/*    isLastQuestion={isLastQuestion}*/}
+        {/*    onClick={() => {}}*/}
+        {/*  />*/}
+        {/*</div>*/}
+      </div>
     </div>
   );
 }

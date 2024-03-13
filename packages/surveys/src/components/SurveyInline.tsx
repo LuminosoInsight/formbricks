@@ -1,5 +1,5 @@
 import { SurveyBaseProps } from "../types/props";
-import { Survey } from "./Survey";
+import { SurveyWithPages } from "./SurveyWithPages.tsx";
 
 export function SurveyInline({
   survey,
@@ -15,7 +15,7 @@ export function SurveyInline({
 }: SurveyBaseProps) {
   return (
     <div id="fbjs" className="h-full w-full">
-      <Survey
+      <SurveyWithPages
         survey={survey}
         brandColor={brandColor}
         formbricksSignature={formbricksSignature}

@@ -29,11 +29,12 @@ export default function NPSQuestion({
   brandColor,
 }: NPSQuestionProps) {
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit({ [question.id]: value });
-      }}>
+    <div
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   onSubmit({ [question.id]: value });
+      // }}
+      className="rounded-md bg-white p-7 shadow-sm">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
       {question?.image && <SurveyImage image={question.image} />}
@@ -45,11 +46,11 @@ export default function NPSQuestion({
               <label
                 key={number}
                 tabIndex={idx + 1}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    onSubmit({ [question.id]: number });
-                  }
-                }}
+                // onKeyDown={(e) => {
+                //   if (e.key == "Enter") {
+                //     onSubmit({ [question.id]: number });
+                //   }
+                // }}
                 className={cn(
                   value === number ? "z-10 border-slate-400 bg-slate-50" : "",
                   "relative h-10 flex-1 cursor-pointer border bg-white text-center text-sm leading-10 text-slate-800 first:rounded-l-md last:rounded-r-md hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
@@ -81,27 +82,27 @@ export default function NPSQuestion({
         </fieldset>
       </div>
 
-      <div className="mt-4 flex w-full justify-between">
-        {!isFirstQuestion && (
-          <BackButton
-            tabIndex={isLastQuestion ? 12 : 13}
-            backButtonLabel={question.backButtonLabel}
-            onClick={() => {
-              onBack();
-            }}
-          />
-        )}
-        <div></div>
-        {!question.required && (
-          <SubmitButton
-            tabIndex={12}
-            question={question}
-            isLastQuestion={isLastQuestion}
-            brandColor={brandColor}
-            onClick={() => {}}
-          />
-        )}
-      </div>
-    </form>
+      {/*<div className="mt-4 flex w-full justify-between">*/}
+      {/*  {!isFirstQuestion && (*/}
+      {/*    <BackButton*/}
+      {/*      tabIndex={isLastQuestion ? 12 : 13}*/}
+      {/*      backButtonLabel={question.backButtonLabel}*/}
+      {/*      onClick={() => {*/}
+      {/*        onBack();*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*  <div></div>*/}
+      {/*  {!question.required && (*/}
+      {/*    <SubmitButton*/}
+      {/*      tabIndex={12}*/}
+      {/*      question={question}*/}
+      {/*      isLastQuestion={isLastQuestion}*/}
+      {/*      brandColor={brandColor}*/}
+      {/*      onClick={() => {}}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*</div>*/}
+    </div>
   );
 }

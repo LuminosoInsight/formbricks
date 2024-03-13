@@ -42,14 +42,14 @@ export default function OpenTextQuestion({
   }, []);
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        //  if ( validateInput(value as string, question.inputType, question.required)) {
-        onSubmit({ [question.id]: value, inputType: question.inputType });
-        // }
-      }}
-      className="w-full">
+    <div
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   //  if ( validateInput(value as string, question.inputType, question.required)) {
+      //   onSubmit({ [question.id]: value, inputType: question.inputType });
+      //   // }
+      // }}
+      className="w-full rounded-md bg-white p-7 shadow-sm">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
       {question?.image && <SurveyImage image={question.image} />}
@@ -66,9 +66,9 @@ export default function OpenTextQuestion({
             type={question.inputType}
             onInput={(e) => handleInputChange(e.currentTarget.value)}
             autoFocus={autoFocus}
-            onKeyDown={(e) => {
-              if (e.key == "Enter") onSubmit({ [question.id]: value });
-            }}
+            // onKeyDown={(e) => {
+            //   if (e.key == "Enter") onSubmit({ [question.id]: value });
+            // }}
             pattern={question.inputType === "phone" ? "[+][0-9 ]+" : ".*"}
             title={question.inputType === "phone" ? "Enter a valid phone number" : undefined}
             className={`block w-full rounded-md border
@@ -96,23 +96,23 @@ export default function OpenTextQuestion({
         )}
       </div>
 
-      <div className="mt-4 flex w-full justify-between">
-        {!isFirstQuestion && (
-          <BackButton
-            backButtonLabel={question.backButtonLabel}
-            onClick={() => {
-              onBack();
-            }}
-          />
-        )}
-        <div></div>
-        <SubmitButton
-          question={question}
-          isLastQuestion={isLastQuestion}
-          brandColor={brandColor}
-          onClick={() => {}}
-        />
-      </div>
-    </form>
+      {/*<div className="mt-4 flex w-full justify-between">*/}
+      {/*  {!isFirstQuestion && (*/}
+      {/*    <BackButton*/}
+      {/*      backButtonLabel={question.backButtonLabel}*/}
+      {/*      onClick={() => {*/}
+      {/*        onBack();*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*  <div></div>*/}
+      {/*  <SubmitButton*/}
+      {/*    question={question}*/}
+      {/*    isLastQuestion={isLastQuestion}*/}
+      {/*    brandColor={brandColor}*/}
+      {/*    onClick={() => {}}*/}
+      {/*  />*/}
+      {/*</div>*/}
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import { isLight } from "../lib/utils";
 import { TSurveyQuestion } from "../../../types/v1/surveys";
 
 interface SubmitButtonProps {
-  question: TSurveyQuestion;
+  question?: TSurveyQuestion;
   isLastQuestion: boolean;
   brandColor: string;
   onClick: () => void;
@@ -42,7 +42,7 @@ function SubmitButton({
       )}
       style={{ backgroundColor: brandColor }}
       onClick={onClick}>
-      {question.buttonLabel || (isLastQuestion ? "Finish" : "Next")}
+      {isLastQuestion ? "Finish" : "Next"}
     </button>
   );
 }

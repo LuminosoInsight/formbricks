@@ -57,12 +57,12 @@ export default function MultipleChoiceSingleQuestion({
     }
   }, [otherSelected]);
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit({ [question.id]: value });
-      }}
-      className="w-full">
+    <div
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   onSubmit({ [question.id]: value });
+      // }}
+      className="w-full rounded-md bg-white p-7 shadow-sm">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
       {question?.image && <SurveyImage image={question.image} />}
@@ -76,14 +76,14 @@ export default function MultipleChoiceSingleQuestion({
               <label
                 key={choice.id}
                 tabIndex={idx + 1}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    onChange({ [question.id]: choice.label });
-                    setTimeout(() => {
-                      onSubmit({ [question.id]: choice.label });
-                    }, 350);
-                  }
-                }}
+                // onKeyDown={(e) => {
+                //   if (e.key == "Enter") {
+                //     onChange({ [question.id]: choice.label });
+                //     setTimeout(() => {
+                //       onSubmit({ [question.id]: choice.label });
+                //     }, 350);
+                //   }
+                // }}
                 className={cn(
                   value === choice.label ? "z-10 border-slate-400 bg-slate-50" : "border-gray-200",
                   "relative flex cursor-pointer flex-col rounded-md border p-4 text-slate-800 focus-within:border-slate-400  focus-within:bg-slate-50 hover:bg-slate-50 focus:outline-none "
@@ -118,12 +118,13 @@ export default function MultipleChoiceSingleQuestion({
                   value === otherOption.label ? "z-10 border-slate-400 bg-slate-50" : "border-gray-200",
                   "relative flex cursor-pointer flex-col rounded-md border p-4 text-slate-800 focus-within:border-slate-400 focus-within:bg-slate-50  hover:bg-slate-50 focus:outline-none"
                 )}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    setOtherSelected(!otherSelected);
-                    if (!otherSelected) onChange({ [question.id]: "" });
-                  }
-                }}>
+                // onKeyDown={(e) => {
+                //   if (e.key == "Enter") {
+                //     setOtherSelected(!otherSelected);
+                //     if (!otherSelected) onChange({ [question.id]: "" });
+                //   }
+                // }}
+              >
                 <span className="flex items-center text-sm">
                   <input
                     type="radio"
@@ -154,13 +155,13 @@ export default function MultipleChoiceSingleQuestion({
                     onChange={(e) => {
                       onChange({ [question.id]: e.currentTarget.value });
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key == "Enter") {
-                        setTimeout(() => {
-                          onSubmit({ [question.id]: value });
-                        }, 100);
-                      }
-                    }}
+                    // onKeyDown={(e) => {
+                    //   if (e.key == "Enter") {
+                    //     setTimeout(() => {
+                    //       onSubmit({ [question.id]: value });
+                    //     }, 100);
+                    //   }
+                    // }}
                     placeholder="Please specify"
                     className="mt-3 flex h-10 w-full rounded-md border border-slate-300 bg-transparent bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none  focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-500 dark:text-slate-300"
                     required={question.required}
@@ -172,23 +173,23 @@ export default function MultipleChoiceSingleQuestion({
           </div>
         </fieldset>
       </div>
-      <div className="mt-4 flex w-full justify-between">
-        {!isFirstQuestion && (
-          <BackButton
-            backButtonLabel={question.backButtonLabel}
-            tabIndex={questionChoices.length + 3}
-            onClick={onBack}
-          />
-        )}
-        <div></div>
-        <SubmitButton
-          tabIndex={questionChoices.length + 2}
-          question={question}
-          isLastQuestion={isLastQuestion}
-          brandColor={brandColor}
-          onClick={() => {}}
-        />
-      </div>
-    </form>
+      {/*<div className="mt-4 flex w-full justify-between">*/}
+      {/*  {!isFirstQuestion && (*/}
+      {/*    <BackButton*/}
+      {/*      backButtonLabel={question.backButtonLabel}*/}
+      {/*      tabIndex={questionChoices.length + 3}*/}
+      {/*      onClick={onBack}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*  <div></div>*/}
+      {/*  <SubmitButton*/}
+      {/*    tabIndex={questionChoices.length + 2}*/}
+      {/*    question={question}*/}
+      {/*    isLastQuestion={isLastQuestion}*/}
+      {/*    brandColor={brandColor}*/}
+      {/*    onClick={() => {}}*/}
+      {/*  />*/}
+      {/*</div>*/}
+    </div>
   );
 }

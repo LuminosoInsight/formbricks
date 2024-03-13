@@ -65,12 +65,12 @@ export default function RatingQuestion({
   );
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit({ [question.id]: value });
-      }}
-      className="w-full">
+    <div
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   onSubmit({ [question.id]: value });
+      // }}
+      className="w-full rounded-md bg-white p-7 shadow-sm">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
       {question?.image && <SurveyImage image={question.image} />}
@@ -175,28 +175,28 @@ export default function RatingQuestion({
         </fieldset>
       </div>
 
-      <div className="mt-4 flex w-full justify-between">
-        {!isFirstQuestion && (
-          <BackButton
-            tabIndex={!question.required || value ? question.range + 2 : question.range + 1}
-            backButtonLabel={question.backButtonLabel}
-            onClick={() => {
-              onBack();
-            }}
-          />
-        )}
-        <div></div>
-        {(!question.required || value) && (
-          <SubmitButton
-            tabIndex={question.range + 1}
-            question={question}
-            isLastQuestion={isLastQuestion}
-            brandColor={brandColor}
-            onClick={() => {}}
-          />
-        )}
-      </div>
-    </form>
+      {/*<div className="mt-4 flex w-full justify-between">*/}
+      {/*  {!isFirstQuestion && (*/}
+      {/*    <BackButton*/}
+      {/*      tabIndex={!question.required || value ? question.range + 2 : question.range + 1}*/}
+      {/*      backButtonLabel={question.backButtonLabel}*/}
+      {/*      onClick={() => {*/}
+      {/*        onBack();*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*  <div></div>*/}
+      {/*  {(!question.required || value) && (*/}
+      {/*    <SubmitButton*/}
+      {/*      tabIndex={question.range + 1}*/}
+      {/*      question={question}*/}
+      {/*      isLastQuestion={isLastQuestion}*/}
+      {/*      brandColor={brandColor}*/}
+      {/*      onClick={() => {}}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*</div>*/}
+    </div>
   );
 }
 

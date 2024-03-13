@@ -17,7 +17,7 @@ const SurveyImage = ({ image }: Props) => {
       onMouseEnter={() => setImageHovered(true)}
       onMouseLeave={() => setImageHovered(false)}
       onClick={openImageHandler}
-      className="relative my-5 w-full cursor-pointer">
+      className="relative my-5 flex w-full cursor-pointer justify-center">
       <div
         className={cn(
           "absolute z-[1] flex h-full w-full items-center justify-center bg-[#00000073] transition-all",

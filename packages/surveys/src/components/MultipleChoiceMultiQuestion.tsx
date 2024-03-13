@@ -84,16 +84,16 @@ export default function MultipleChoiceSingleQuestion({
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const newValue = (value as string[])?.filter((item) => {
-          return getChoicesWithoutOtherLabels().includes(item) || item === otherValue;
-        }); // filter out all those values which are either in getChoicesWithoutOtherLabels() (i.e. selected by checkbox) or the latest entered otherValue
-        onChange({ [question.id]: newValue });
-        onSubmit({ [question.id]: newValue });
-      }}
-      className="w-full">
+    <div
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   const newValue = (value as string[])?.filter((item) => {
+      //     return getChoicesWithoutOtherLabels().includes(item) || item === otherValue;
+      //   }); // filter out all those values which are either in getChoicesWithoutOtherLabels() (i.e. selected by checkbox) or the latest entered otherValue
+      //   onChange({ [question.id]: newValue });
+      //   onSubmit({ [question.id]: newValue });
+      // }}
+      className="w-full rounded-md bg-white p-7 shadow-sm">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       <Subheader subheader={question.subheader} questionId={question.id} />
       {question?.image && <SurveyImage image={question.image} />}
@@ -105,15 +105,15 @@ export default function MultipleChoiceSingleQuestion({
               <label
                 key={choice.id}
                 tabIndex={idx + 1}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    if (Array.isArray(value) && value.includes(choice.label)) {
-                      removeItem(choice.label);
-                    } else {
-                      addItem(choice.label);
-                    }
-                  }
-                }}
+                // onKeyDown={(e) => {
+                //   if (e.key == "Enter") {
+                //     if (Array.isArray(value) && value.includes(choice.label)) {
+                //       removeItem(choice.label);
+                //     } else {
+                //       addItem(choice.label);
+                //     }
+                //   }
+                // }}
                 className={cn(
                   value === choice.label ? "z-10 border-slate-400 bg-slate-50" : "border-gray-200",
                   "relative flex cursor-pointer flex-col rounded-md border p-4 text-slate-800 focus-within:border-slate-400 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none "
@@ -153,11 +153,12 @@ export default function MultipleChoiceSingleQuestion({
                   value === otherOption.label ? "z-10 border-slate-400 bg-slate-50" : "border-gray-200",
                   "relative flex cursor-pointer flex-col rounded-md border p-4 text-slate-800 focus-within:border-slate-400 focus-within:bg-slate-50  hover:bg-slate-50 focus:outline-none"
                 )}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    setOtherSelected(!otherSelected);
-                  }
-                }}>
+                // onKeyDown={(e) => {
+                //   if (e.key == "Enter") {
+                //     setOtherSelected(!otherSelected);
+                //   }
+                // }}
+              >
                 <span className="flex items-center text-sm">
                   <input
                     type="checkbox"
@@ -194,13 +195,13 @@ export default function MultipleChoiceSingleQuestion({
                       setOtherValue(e.currentTarget.value);
                       addItem(e.currentTarget.value);
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key == "Enter") {
-                        setTimeout(() => {
-                          onSubmit({ [question.id]: value });
-                        }, 100);
-                      }
-                    }}
+                    // onKeyDown={(e) => {
+                    //   if (e.key == "Enter") {
+                    //     setTimeout(() => {
+                    //       onSubmit({ [question.id]: value });
+                    //     }, 100);
+                    //   }
+                    // }}
                     placeholder="Please specify"
                     className="mt-3 flex h-10 w-full rounded-md border border-slate-300 bg-transparent bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none  focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-500 dark:text-slate-300"
                     required={question.required}
@@ -212,23 +213,23 @@ export default function MultipleChoiceSingleQuestion({
           </div>
         </fieldset>
       </div>
-      <div className="mt-4 flex w-full justify-between">
-        {!isFirstQuestion && (
-          <BackButton
-            tabIndex={questionChoices.length + 3}
-            backButtonLabel={question.backButtonLabel}
-            onClick={onBack}
-          />
-        )}
-        <div></div>
-        <SubmitButton
-          tabIndex={questionChoices.length + 2}
-          question={question}
-          isLastQuestion={isLastQuestion}
-          brandColor={brandColor}
-          onClick={() => {}}
-        />
-      </div>
-    </form>
+      {/*<div className="mt-4 flex w-full justify-between">*/}
+      {/*  {!isFirstQuestion && (*/}
+      {/*    <BackButton*/}
+      {/*      tabIndex={questionChoices.length + 3}*/}
+      {/*      backButtonLabel={question.backButtonLabel}*/}
+      {/*      onClick={onBack}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*  <div></div>*/}
+      {/*  <SubmitButton*/}
+      {/*    tabIndex={questionChoices.length + 2}*/}
+      {/*    question={question}*/}
+      {/*    isLastQuestion={isLastQuestion}*/}
+      {/*    brandColor={brandColor}*/}
+      {/*    onClick={() => {}}*/}
+      {/*  />*/}
+      {/*</div>*/}
+    </div>
   );
 }

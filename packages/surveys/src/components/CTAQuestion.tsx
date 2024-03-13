@@ -26,7 +26,7 @@ export default function CTAQuestion({
   brandColor,
 }: CTAQuestionProps) {
   return (
-    <div>
+    <div className="rounded-md bg-white p-7 shadow-sm">
       <Headline headline={question.headline} questionId={question.id} required={question.required} />
       {question?.image && <SurveyImage image={question.image} />}
       <HtmlBody htmlString={question.html} questionId={question.id} />
@@ -35,32 +35,32 @@ export default function CTAQuestion({
         {!isFirstQuestion && (
           <BackButton backButtonLabel={question.backButtonLabel} onClick={() => onBack()} />
         )}
-        <div className="flex w-full justify-end">
-          {!question.required && (
-            <button
-              tabIndex={0}
-              type="button"
-              onClick={() => {
-                onSubmit({ [question.id]: "dismissed" });
-              }}
-              className="mr-4 flex items-center rounded-md px-3 py-3 text-base font-medium leading-4 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:text-slate-400">
-              {question.dismissButtonLabel || "Skip"}
-            </button>
-          )}
-          <SubmitButton
-            question={question}
-            isLastQuestion={isLastQuestion}
-            brandColor={brandColor}
-            focus={true}
-            onClick={() => {
-              if (question.buttonExternal && question.buttonUrl) {
-                window?.open(question.buttonUrl, "_blank")?.focus();
-              }
-              onSubmit({ [question.id]: "clicked" });
-            }}
-            type="button"
-          />
-        </div>
+        {/*<div className="flex w-full justify-end">*/}
+        {/*  {!question.required && (*/}
+        {/*    <button*/}
+        {/*      tabIndex={0}*/}
+        {/*      type="button"*/}
+        {/*      onClick={() => {*/}
+        {/*        onSubmit({ [question.id]: "dismissed" });*/}
+        {/*      }}*/}
+        {/*      className="mr-4 flex items-center rounded-md px-3 py-3 text-base font-medium leading-4 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:text-slate-400">*/}
+        {/*      {question.dismissButtonLabel || "Skip"}*/}
+        {/*    </button>*/}
+        {/*  )}*/}
+        {/*  <SubmitButton*/}
+        {/*    question={question}*/}
+        {/*    isLastQuestion={isLastQuestion}*/}
+        {/*    brandColor={brandColor}*/}
+        {/*    focus={true}*/}
+        {/*    onClick={() => {*/}
+        {/*      if (question.buttonExternal && question.buttonUrl) {*/}
+        {/*        window?.open(question.buttonUrl, "_blank")?.focus();*/}
+        {/*      }*/}
+        {/*      onSubmit({ [question.id]: "clicked" });*/}
+        {/*    }}*/}
+        {/*    type="button"*/}
+        {/*  />*/}
+        {/*</div>*/}
       </div>
     </div>
   );

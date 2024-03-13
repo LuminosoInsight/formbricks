@@ -248,8 +248,12 @@ export const ZSurveyQuestion = z.union([
 export type TSurveyQuestion = z.infer<typeof ZSurveyQuestion>;
 
 export const ZSurveyQuestions = z.array(ZSurveyQuestion);
+export const ZSurveyPage = z.object({ id: z.string(), questions: ZSurveyQuestions });
+export const ZSurveyPages = z.array(ZSurveyPage);
 
 export type TSurveyQuestions = z.infer<typeof ZSurveyQuestions>;
+export type TSurveyPage = z.infer<typeof ZSurveyPage>;
+export type TSurveyPages = z.infer<typeof ZSurveyPages>;
 
 export const ZSurveyAttributeFilter = z.object({
   attributeClassId: z.string().cuid2(),
@@ -282,6 +286,7 @@ export const ZSurvey = z.object({
   redirectUrl: z.string().url().nullable(),
   recontactDays: z.number().nullable(),
   questions: ZSurveyQuestions,
+  pages: z.array(z.object({ id: z.string(), questions: ZSurveyQuestions })),
   thankYouCard: ZSurveyThankYouCard,
   delay: z.number(),
   autoComplete: z.number().nullable(),
@@ -304,6 +309,7 @@ export const ZSurveyInput = z.object({
   redirectUrl: z.string().url().optional(),
   recontactDays: z.number().optional(),
   questions: ZSurveyQuestions.optional(),
+  pages: z.array(z.object({ id: z.string(), questions: ZSurveyQuestions })).optional(),
   thankYouCard: ZSurveyThankYouCard.optional(),
   delay: z.number().optional(),
   autoComplete: z.number().optional(),

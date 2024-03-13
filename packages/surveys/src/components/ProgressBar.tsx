@@ -4,21 +4,24 @@ import Progress from "./Progress";
 
 interface ProgressBarProps {
   survey: TSurvey;
-  questionId: string;
+  questionId?: string;
   brandColor: string;
+  pageId?: string;
 }
 
-const PROGRESS_INCREMENT = 0.1;
+export default function ProgressBar({ survey, questionId, brandColor, pageId }: ProgressBarProps) {
+  const PROGRESS_INCREMENT = 1 / (survey.pages.length + 1);
 
-export default function ProgressBar({ survey, questionId, brandColor }: ProgressBarProps) {
   const [progress, setProgress] = useState(0); // [0, 1]
   const [prevQuestionIdx, setPrevQuestionIdx] = useState(0); // [0, survey.questions.length
+  const [prevPageIdx, setPrevPageIdx] = useState(0); // [0, survey.questions.length
 
   useEffect(() => {
     // calculate progress
-    setProgress(calculateProgress(questionId, survey, progress));
+    if (questionId) setProgress(calculateProgressByQuestion(questionId, survey, progress));
+    if (pageId) setProgress(calculateProgressByPage(pageId, survey, progress));
 
-    function calculateProgress(questionId: string, survey: TSurvey, progress: number) {
+    function calculateProgressByQuestion(questionId: string, survey: TSurvey, progress: number) {
       if (survey.questions.length === 0) return 0;
       if (questionId === "end") return 1;
 
@@ -62,7 +65,55 @@ export default function ProgressBar({ survey, questionId, brandColor }: Progress
       setPrevQuestionIdx(currentQustionIdx);
       return updatedProgress;
     }
-  }, [questionId, survey, setPrevQuestionIdx]);
 
-  return <Progress progress={progress} brandColor={brandColor} />;
+    function calculateProgressByPage(pageId: string, survey: TSurvey, progress: number) {
+      if (survey.pages.length === 0) return 0;
+      if (pageId === "end") return 1;
+
+      let currentPageIdx = survey.pages.findIndex((e) => e.id === pageId);
+      if (progress > 0 && currentPageIdx === prevPageIdx) return progress;
+      if (currentPageIdx === -1) currentPageIdx = 0;
+      const currentPage = survey.pages[currentPageIdx];
+      const surveyLength = survey.pages.length;
+      const middleIdx = Math.floor(surveyLength / 2);
+      // const possibleNextQuestions = currentPage.logic?.map((l) => l.destination) || [];
+
+      const getLastPageIndex = () => {
+        const copyPages = [...survey.pages];
+        const lastPage = copyPages
+          // .filter((q) => possibleNextQuestions.includes(q.id))
+          .sort((a, b) => survey.pages.indexOf(a) - survey.pages.indexOf(b))
+          .pop();
+        return survey.pages.findIndex((e) => e.id === lastPage?.id);
+      };
+
+      let elementIdx = currentPageIdx || 0.5;
+      const lastprevPageIdx = getLastPageIndex();
+
+      if (lastprevPageIdx > 0) elementIdx = Math.min(middleIdx, lastprevPageIdx - 1);
+      // if (possibleNextQuestions.includes("end")) elementIdx = middleIdx;
+
+      const newProgress = elementIdx / survey.pages.length;
+
+      // Determine if user went backwards in the survey
+      const didUserGoBackwards = currentPageIdx < prevPageIdx;
+
+      // Update the progress array based on user's navigation
+      let updatedProgress = progress;
+      if (didUserGoBackwards) {
+        updatedProgress = progress - (prevPageIdx - currentPageIdx) * PROGRESS_INCREMENT;
+      } else if (newProgress > progress) {
+        updatedProgress = newProgress;
+      } else if (newProgress <= progress && progress + PROGRESS_INCREMENT <= 1) {
+        updatedProgress = progress + PROGRESS_INCREMENT;
+      }
+
+      setPrevPageIdx(currentPageIdx);
+      return updatedProgress;
+    }
+  }, [pageId, survey, setPrevPageIdx]);
+
+  return (
+    <Progress idx={prevPageIdx} length={survey?.pages.length} progress={progress} brandColor={brandColor} />
+  );
 }

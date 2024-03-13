@@ -35,7 +35,7 @@ export default async function LinkSurveyPage({ params, searchParams }: LinkSurve
   }
 
   // question pre filling: Check if the first question is prefilled and if it is valid
-  const prefillAnswer = searchParams[survey.questions[0].id];
+  const prefillAnswer = searchParams[survey.pages[0]?.questions[0]?.id];
   const isPrefilledAnswerValid = prefillAnswer ? checkValidity(survey!.questions[0], prefillAnswer) : false;
 
   if (survey && survey.status !== "inProgress") {
