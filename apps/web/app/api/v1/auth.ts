@@ -30,6 +30,7 @@ export async function authenticateRequest(request: Request): Promise<TAuthentica
   if (apiKey) {
     const daylightUserData = await getDaylightUserData(apiKey);
 
+    console.log("Daylight user: ", daylightUserData);
     if (!daylightUserData || daylightUserData instanceof NextResponse) return null;
 
     let existedUser: any = await prisma.user.findFirst({
@@ -39,6 +40,7 @@ export async function authenticateRequest(request: Request): Promise<TAuthentica
     });
 
     if (!existedUser) {
+      console.log("User does not exist, creating...");
       await createUser(
         daylightUserData.full_name,
         daylightUserData.username,

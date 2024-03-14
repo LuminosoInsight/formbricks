@@ -10,6 +10,18 @@ export const createUser = async (
   const hashedPassword = await hashPassword(password);
   try {
     const fetchUrl = webAppUrl ? `${webAppUrl}/api/v1/users` : `/api/v1/users`;
+    console.log("fetchUrl: ", fetchUrl);
+    console.log(
+      "Create user body: ",
+      JSON.stringify({
+        name,
+        email,
+        password: hashedPassword,
+        inviteToken,
+        onboardingCompleted: false,
+      })
+    );
+
     const res = await fetch(fetchUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -21,11 +33,15 @@ export const createUser = async (
         onboardingCompleted: false,
       }),
     });
+    console.log("res: ", res);
     if (res.status !== 200) {
       const json = await res.json();
+      console.log("Error: ", json);
       throw Error(json.error);
     }
-    return await res.json();
+    const jsonedRes = await res.json();
+    console.log(jsonedRes);
+    return jsonedRes;
   } catch (error: any) {
     throw Error(`${error.message}`);
   }
