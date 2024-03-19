@@ -26,6 +26,8 @@ export function SurveyInline({
         onClose={onClose}
         prefillResponseData={prefillResponseData}
         isRedirectDisabled={isRedirectDisabled}
+        activePageId={activeQuestionId}
+        onActivePageChange={onActiveQuestionChange}
       />
     </div>
   );

@@ -57,6 +57,7 @@ export interface Survey {
   singleUse: SurveySingleUse | null;
   _count: { responses: number | null } | null;
   productOverwrites: SurveyProductOverwrites | null;
+  pages: { id: string; questions: Question[] }[];
 }
 
 export interface AttributeFilter {

@@ -6,11 +6,13 @@ export interface SurveyBaseProps {
   brandColor: string;
   formbricksSignature: boolean;
   activeQuestionId?: string;
+  activePageId?: string;
   onDisplay?: () => void;
   onResponse?: (response: Partial<TResponse>) => void;
   onFinished?: () => void;
   onClose?: () => void;
   onActiveQuestionChange?: (questionId: string) => void;
+  onActivePageChange?: (pageId: string) => void;
   autoFocus?: boolean;
   isRedirectDisabled?: boolean;
   prefillResponseData?: TResponseData;

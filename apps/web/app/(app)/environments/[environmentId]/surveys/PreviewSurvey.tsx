@@ -125,7 +125,7 @@ export default function PreviewSurvey({
       if (activeQuestionId === "thank-you-card") {
         setIsModalOpen(false);
         setTimeout(() => {
-          setActiveQuestionId(survey.questions[0].id);
+          setActiveQuestionId(survey.questions?.[0]?.id || survey.pages?.[0]?.id);
           setIsModalOpen(true);
         }, 500);
       }
@@ -148,7 +148,7 @@ export default function PreviewSurvey({
       setPreviewMode(storePreviewMode);
     }, 10);
 
-    setActiveQuestionId(survey.questions[0].id);
+    setActiveQuestionId(survey.questions?.[0]?.id || survey.pages?.[0]?.id);
   }
 
   useEffect(() => {
@@ -171,7 +171,7 @@ export default function PreviewSurvey({
     <div className="flex h-full w-full flex-col items-center justify-items-center">
       <motion.div
         variants={previewParentContainerVariant}
-        className="fixed hidden h-[95%] w-5/6"
+        className="fixed hidden h-full w-full"
         animate={isFullScreenPreview ? "expanded" : "shrink"}
       />
       <motion.div
@@ -184,13 +184,13 @@ export default function PreviewSurvey({
               : "expanded_with_fixed_positioning"
             : "shrink"
         }
-        className="relative flex h-[95] max-h-[95%] w-5/6 items-center justify-center rounded-lg border border-slate-300 bg-slate-200">
+        className="relative flex !h-full !max-h-full !w-full items-center justify-center rounded-lg border border-slate-300 bg-slate-200">
         {previewMode === "mobile" && (
           <>
             <div className="absolute right-0 top-0 m-2">
               <ResetProgressButton resetQuestionProgress={resetQuestionProgress} />
             </div>
-            <div className="relative h-[90%] max-h-[40rem] w-80 overflow-hidden rounded-[3rem] border-8 border-slate-500 bg-slate-400">
+            <div className="relative h-[90%] max-h-[40rem] w-full overflow-hidden rounded-[3rem] border-8 border-slate-500 bg-slate-400">
               {/* below element is use to create notch for the mobile device mockup   */}
               <div className="absolute left-1/2 right-1/2 top-0 z-20 h-4 w-1/2 -translate-x-1/2 transform rounded-b-md bg-slate-500"></div>
               {previewType === "modal" ? (
@@ -236,31 +236,31 @@ export default function PreviewSurvey({
                 <div className="h-3 w-3 rounded-full bg-amber-500"></div>
                 <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
               </div>
-              <p className="ml-4 flex w-full justify-between font-mono text-sm text-slate-400">
+              <div className="ml-4 flex w-full justify-between font-mono text-sm text-slate-400">
                 {previewType === "modal" ? "Your web app" : "Preview"}
                 <div className="flex items-center">
-                  {isFullScreenPreview ? (
-                    <ArrowsPointingInIcon
-                      className="mr-2 h-4 w-4 cursor-pointer"
-                      onClick={() => {
-                        setshrink(true);
-                        setPreviewPosition("relative");
-                        setTimeout(() => setIsFullScreenPreview(false), 300);
-                      }}
-                    />
-                  ) : (
-                    <ArrowsPointingOutIcon
-                      className="mr-2 h-4 w-4 cursor-pointer"
-                      onClick={() => {
-                        setshrink(false);
-                        setIsFullScreenPreview(true);
-                        setTimeout(() => setPreviewPosition("fixed"), 300);
-                      }}
-                    />
-                  )}
+                  {/*{isFullScreenPreview ? (*/}
+                  {/*  <ArrowsPointingInIcon*/}
+                  {/*    className="mr-2 h-4 w-4 cursor-pointer"*/}
+                  {/*    onClick={() => {*/}
+                  {/*      setshrink(true);*/}
+                  {/*      setPreviewPosition("relative");*/}
+                  {/*      setTimeout(() => setIsFullScreenPreview(false), 300);*/}
+                  {/*    }}*/}
+                  {/*  />*/}
+                  {/*) : (*/}
+                  {/*  <ArrowsPointingOutIcon*/}
+                  {/*    className="mr-2 h-4 w-4 cursor-pointer"*/}
+                  {/*    onClick={() => {*/}
+                  {/*      setshrink(false);*/}
+                  {/*      setIsFullScreenPreview(true);*/}
+                  {/*      setTimeout(() => setPreviewPosition("fixed"), 300);*/}
+                  {/*    }}*/}
+                  {/*  />*/}
+                  {/*)}*/}
                   <ResetProgressButton resetQuestionProgress={resetQuestionProgress} />
                 </div>
-              </p>
+              </div>
             </div>
 
             {previewType === "modal" ? (
@@ -299,18 +299,18 @@ export default function PreviewSurvey({
       </motion.div>
 
       {/* for toggling between mobile and desktop mode  */}
-      <div className="mt-2 flex rounded-full border-2 border-slate-300 p-1">
-        <TabOption
-          active={previewMode === "mobile"}
-          icon={<DevicePhoneMobileIcon className="mx-4 my-2 h-4 w-4 text-slate-700" />}
-          onClick={() => setPreviewMode("mobile")}
-        />
-        <TabOption
-          active={previewMode === "desktop"}
-          icon={<ComputerDesktopIcon className="mx-4 my-2 h-4 w-4 text-slate-700" />}
-          onClick={() => setPreviewMode("desktop")}
-        />
-      </div>
+      {/*<div className="mt-2 flex rounded-full border-2 border-slate-300 p-1">*/}
+      {/*  <TabOption*/}
+      {/*    active={previewMode === "mobile"}*/}
+      {/*    icon={<DevicePhoneMobileIcon className="mx-4 my-2 h-4 w-4 text-slate-700" />}*/}
+      {/*    onClick={() => setPreviewMode("mobile")}*/}
+      {/*  />*/}
+      {/*  <TabOption*/}
+      {/*    active={previewMode === "desktop"}*/}
+      {/*    icon={<ComputerDesktopIcon className="mx-4 my-2 h-4 w-4 text-slate-700" />}*/}
+      {/*    onClick={() => setPreviewMode("desktop")}*/}
+      {/*  />*/}
+      {/*</div>*/}
     </div>
   );
 }

@@ -17,6 +17,8 @@ export function SurveyWithPages({
   brandColor,
   // formbricksSignature,
   // activeQuestionId,
+  activePageId,
+  onActivePageChange = () => {},
   onDisplay = () => {},
   onActiveQuestionChange = () => {},
   onResponse = () => {},
@@ -25,7 +27,7 @@ export function SurveyWithPages({
   isRedirectDisabled = false,
   prefillResponseData,
 }: SurveyBaseProps) {
-  const [pageId, setPageId] = useState(survey.pages[0]?.id);
+  const [pageId, setPageId] = useState(activePageId || survey.pages[0]?.id);
   const [loadingElement, setLoadingElement] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [responseData, setResponseData] = useState<TResponseData>({});
@@ -33,9 +35,9 @@ export function SurveyWithPages({
   // const currentPage = survey.pages[currentPageIndex];
   const contentRef = useRef<HTMLDivElement | null>(null);
 
-  // useEffect(() => {
-  //   setPageId(survey.pages[0].id);
-  // }, [survey.pages[0].id]);
+  useEffect(() => {
+    setPageId(activePageId || survey.pages[0].id);
+  }, [activePageId, survey.pages]);
 
   useEffect(() => {
     // scroll to top when question changes
@@ -86,7 +88,7 @@ export function SurveyWithPages({
     // add to history
     setHistory([...history, pageId]);
     setLoadingElement(false);
-    // onActiveQuestionChange(nextPageId);
+    onActivePageChange(nextPageId);
   };
 
   const onBack = (): void => {
@@ -101,9 +103,9 @@ export function SurveyWithPages({
       // otherwise go back to previous page in array
       prevPageId = survey.pages[currentPageIndex - 1]?.id;
     }
-    if (!prevPageId) throw new Error("Question not found");
+    if (!prevPageId) throw new Error("Page not found");
     setPageId(prevPageId);
-    onActiveQuestionChange(prevPageId);
+    onActivePageChange(prevPageId);
   };
 
   return (
@@ -111,7 +113,8 @@ export function SurveyWithPages({
       <AutoCloseWrapper survey={survey} brandColor={brandColor} onClose={onClose}>
         <div className="flex h-full w-full flex-col justify-between bg-[transparent] px-6 pb-3 pt-6">
           <div ref={contentRef} className={cn(loadingElement ? "animate-pulse opacity-60" : "", "my-auto")}>
-            {pageId === "end" && survey.thankYouCard.enabled ? (
+            {/*{pageId === "end" && survey.thankYouCard.enabled ? (*/}
+            {pageId === "end" ? (
               <ThankYouCard
                 headline={survey.thankYouCard.headline}
                 subheader={survey.thankYouCard.subheader}
