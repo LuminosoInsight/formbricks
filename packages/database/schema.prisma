@@ -266,6 +266,9 @@ model Survey {
   /// @zod.custom(imports.ZSurveyVerifyEmail)
   /// [SurveyVerifyEmail]
   verifyEmail       Json?
+  /// @zod.custom(imports.ZSurveyStyling)
+  /// [SurveyStyling]
+  styling           Json?
 }
 
 model Event {

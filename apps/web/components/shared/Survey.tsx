@@ -3,6 +3,7 @@ import { Survey } from "@formbricks/types/surveys";
 import { TResponseData, TResponseUpdate } from "@formbricks/types/v1/responses";
 import { TSurvey } from "@formbricks/types/v1/surveys";
 import { useEffect, useMemo } from "react";
+import ContentWrapper from "@/components/shared/ContentWrapper";
 
 const createContainerId = () => `formbricks-survey-container`;
 
@@ -19,6 +20,8 @@ interface SurveyProps {
   autoFocus?: boolean;
   prefillResponseData?: TResponseData;
   isRedirectDisabled?: boolean;
+  activePageId?: string;
+  onActivePageChange?: (pageId: string) => void;
 }
 
 interface SurveyModalProps extends SurveyProps {
@@ -40,6 +43,8 @@ export const SurveyInline = ({
   autoFocus,
   prefillResponseData,
   isRedirectDisabled,
+  onActivePageChange = () => {},
+  activePageId,
 }: SurveyProps) => {
   const containerId = useMemo(() => createContainerId(), []);
   useEffect(() => {
@@ -56,6 +61,8 @@ export const SurveyInline = ({
       autoFocus,
       prefillResponseData,
       isRedirectDisabled,
+      activePageId,
+      onActivePageChange,
     });
   }, [
     activeQuestionId,
@@ -70,8 +77,20 @@ export const SurveyInline = ({
     autoFocus,
     prefillResponseData,
     isRedirectDisabled,
+    activePageId,
+    onActivePageChange,
   ]);
-  return <div id={containerId} className="h-full w-full" />;
+  return (
+    <div
+      className="overflow-y-auto p-0"
+      style={{
+        background: `${survey?.styling?.background?.bg || "white"}`,
+      }}>
+      <ContentWrapper className={`h-full w-full p-0 md:max-w-3xl`}>
+        <div id={containerId} className="h-full w-full" />
+      </ContentWrapper>
+    </div>
+  );
 };
 
 export const SurveyModal = ({

@@ -58,6 +58,13 @@ export interface Survey {
   _count: { responses: number | null } | null;
   productOverwrites: SurveyProductOverwrites | null;
   pages: { id: string; questions: Question[] }[];
+  styling: {
+    background?: {
+      bg?: string;
+      bgType?: string;
+      brightness?: number;
+    };
+  };
 }
 
 export interface AttributeFilter {

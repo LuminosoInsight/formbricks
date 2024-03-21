@@ -42,6 +42,7 @@ export default function LinkSurvey({
   // pass in the responseId if the survey is a single use survey, ensures survey state is updated with the responseId
   const [surveyState, setSurveyState] = useState(new SurveyState(survey.id, singleUseId, responseId));
   const [activeQuestionId, setActiveQuestionId] = useState<string>(survey.pages[0]?.questions[0]?.id);
+  const [activePageId, setActivePageId] = useState<string>(survey.pages[0]?.id);
   const prefillResponseData: TResponseData | undefined = prefillAnswer
     ? getPrefillResponseData(survey.questions[0], survey, prefillAnswer)
     : undefined;
@@ -98,39 +99,39 @@ export default function LinkSurvey({
 
   return (
     <>
-      <ContentWrapper className={`h-full w-full p-0 md:max-w-3xl ${isPreview ? "pt-14" : "pt-5"}`}>
-        {isPreview && (
-          <div className="fixed left-0 top-0 z-40 flex w-full items-center justify-between bg-slate-600 p-2 px-4 text-center text-sm text-white shadow-sm">
-            <div />
-            <div className="flex w-full justify-center">Survey Preview 👀</div>
-            {/*<button*/}
-            {/*  className="flex items-center rounded-full bg-slate-500 px-3 py-1 hover:bg-slate-400"*/}
-            {/*  onClick={() => setActiveQuestionId(survey.questions[0].id)}>*/}
-            {/*  Restart <ArrowPathIcon className="ml-2 h-4 w-4" />*/}
-            {/*</button>*/}
-          </div>
-        )}
-        <SurveyInline
-          survey={survey}
-          brandColor={brandColor}
-          formbricksSignature={product.formbricksSignature}
-          onDisplay={async () => {
-            if (!isPreview) {
-              const { id } = await createDisplay({ surveyId: survey.id }, webAppUrl);
-              const newSurveyState = surveyState.copy();
-              newSurveyState.updateDisplayId(id);
-              setSurveyState(newSurveyState);
-            }
-          }}
-          onResponse={(responseUpdate: TResponseUpdate) => {
-            !isPreview && responseQueue.add(responseUpdate);
-          }}
-          onActiveQuestionChange={(questionId) => setActiveQuestionId(questionId)}
-          activeQuestionId={activeQuestionId}
-          autoFocus={autoFocus}
-          prefillResponseData={prefillResponseData}
-        />
-      </ContentWrapper>
+      {isPreview && (
+        <div className="fixed left-0 top-0 z-40 flex w-full items-center justify-between bg-slate-600 p-2 px-4 text-center text-sm text-white shadow-sm">
+          <div />
+          <div className="flex w-full justify-center">Survey Preview 👀</div>
+          {/*<button*/}
+          {/*  className="flex items-center rounded-full bg-slate-500 px-3 py-1 hover:bg-slate-400"*/}
+          {/*  onClick={() => setActiveQuestionId(survey.questions[0].id)}>*/}
+          {/*  Restart <ArrowPathIcon className="ml-2 h-4 w-4" />*/}
+          {/*</button>*/}
+        </div>
+      )}
+      <SurveyInline
+        survey={survey}
+        brandColor={brandColor}
+        formbricksSignature={product.formbricksSignature}
+        onDisplay={async () => {
+          if (!isPreview) {
+            const { id } = await createDisplay({ surveyId: survey.id }, webAppUrl);
+            const newSurveyState = surveyState.copy();
+            newSurveyState.updateDisplayId(id);
+            setSurveyState(newSurveyState);
+          }
+        }}
+        onResponse={(responseUpdate: TResponseUpdate) => {
+          !isPreview && responseQueue.add(responseUpdate);
+        }}
+        onActiveQuestionChange={(questionId) => setActiveQuestionId(questionId)}
+        activeQuestionId={activeQuestionId}
+        autoFocus={autoFocus}
+        prefillResponseData={prefillResponseData}
+        onActivePageChange={(pageId) => setActivePageId(pageId)}
+        activePageId={activePageId}
+      />
     </>
   );
 }

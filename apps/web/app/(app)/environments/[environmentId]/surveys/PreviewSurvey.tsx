@@ -280,8 +280,8 @@ export default function PreviewSurvey({
               </Modal>
             ) : (
               <div className="flex flex-grow flex-col overflow-y-auto rounded-b-lg" ref={ContentRef}>
-                <div className="flex w-full flex-grow flex-col items-center justify-center bg-white p-4 py-6">
-                  <div className="w-full max-w-md">
+                <div className="flex w-full flex-grow flex-col items-center justify-center bg-white">
+                  <div className="w-full max-w-full">
                     <SurveyInline
                       survey={survey}
                       brandColor={brandColor}

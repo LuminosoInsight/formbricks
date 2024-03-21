@@ -12,6 +12,8 @@ export function SurveyInline({
   onClose = () => {},
   prefillResponseData,
   isRedirectDisabled = false,
+  onActivePageChange = () => {},
+  activePageId,
 }: SurveyBaseProps) {
   return (
     <div id="fbjs" className="h-full w-full">
@@ -26,8 +28,8 @@ export function SurveyInline({
         onClose={onClose}
         prefillResponseData={prefillResponseData}
         isRedirectDisabled={isRedirectDisabled}
-        activePageId={activeQuestionId}
-        onActivePageChange={onActiveQuestionChange}
+        activePageId={activePageId}
+        onActivePageChange={onActivePageChange}
       />
     </div>
   );

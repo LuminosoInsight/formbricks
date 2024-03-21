@@ -269,6 +269,24 @@ const ZSurveyType = z.enum(["web", "email", "link", "mobile"]);
 
 const ZSurveyStatus = z.enum(["draft", "inProgress", "paused", "completed"]);
 
+export const ZSurveyBackgroundBgType = z.enum(["animation", "color", "image"]);
+
+export type TSurveyBackgroundBgType = z.infer<typeof ZSurveyBackgroundBgType>;
+
+export const ZSurveyStylingBackground = z.object({
+  bg: z.string().nullish(),
+  bgType: z.enum(["animation", "color", "image"]).nullish().optional(),
+  brightness: z.number().nullish().optional(),
+});
+
+export type TSurveyStylingBackground = z.infer<typeof ZSurveyStylingBackground>;
+
+export const ZSurveyStyling = z.object({
+  background: ZSurveyStylingBackground.nullish(),
+});
+
+export type TSurveyStyling = z.infer<typeof ZSurveyStyling>;
+
 export const ZSurvey = z.object({
   id: z.string().cuid2(),
   createdAt: z.date(),
@@ -296,6 +314,7 @@ export const ZSurvey = z.object({
   singleUse: ZSurveySingleUse.nullable(),
   verifyEmail: ZSurveyVerifyEmail.nullable(),
   projects: z.array(z.string()).nullable(),
+  styling: ZSurveyStyling.nullable().optional(),
 });
 
 export const ZSurveyInput = z.object({
@@ -319,6 +338,7 @@ export const ZSurveyInput = z.object({
   attributeFilters: z.array(ZSurveyAttributeFilter).optional(),
   triggers: z.array(z.string()).optional(),
   projects: z.array(z.string()).nullable().optional(),
+  styling: ZSurveyStyling.optional(),
 });
 
 export type TSurvey = z.infer<typeof ZSurvey>;

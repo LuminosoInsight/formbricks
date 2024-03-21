@@ -78,6 +78,7 @@ export const selectSurvey = {
     },
   },
   pages: true,
+  styling: true,
 };
 
 export const selectSurveyWithAnalytics = {

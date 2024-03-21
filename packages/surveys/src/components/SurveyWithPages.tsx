@@ -127,7 +127,9 @@ export function SurveyWithPages({
                 <SurveyHeadline surveyId={survey.id} headline={survey.name} />
                 {survey?.description && <Subheader questionId={survey.id} subheader={survey?.description} />}
                 {survey?.image && <img src={survey.image} className="mt-5 w-full" alt={survey.image} />}
-                <div className="mt-5 h-[2px] w-full rounded-full bg-[#0396c2]"></div>
+                <div
+                  className="mt-5 h-[2px] w-full rounded-full"
+                  style={{ background: brandColor || survey?.productOverwrites?.brandColor }}></div>
                 <div className="mt-10">
                   {survey.pages.map(
                     (page, idx) =>
