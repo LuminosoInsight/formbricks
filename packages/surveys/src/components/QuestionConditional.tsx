@@ -30,7 +30,7 @@ export default function QuestionConditional({
   isFirstQuestion,
   isLastQuestion,
   brandColor,
-  autoFocus = true,
+  autoFocus = false,
 }: QuestionConditionalProps) {
   return question.type === QuestionType.OpenText ? (
     <OpenTextQuestion

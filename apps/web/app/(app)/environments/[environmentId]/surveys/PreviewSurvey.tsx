@@ -1,6 +1,6 @@
 "use client";
 import Modal from "@/components/preview/Modal";
-import TabOption from "@/components/preview/TabOption";
+// import TabOption from "@/components/preview/TabOption";
 import { SurveyInline } from "@/components/shared/Survey";
 import { Survey } from "@formbricks/types/surveys";
 import type { TEnvironment } from "@formbricks/types/v1/environment";
@@ -8,12 +8,12 @@ import type { TProduct } from "@formbricks/types/v1/product";
 import { TSurvey } from "@formbricks/types/v1/surveys";
 import { Button } from "@formbricks/ui/Button";
 import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
-import {
-  ArrowsPointingInIcon,
-  ArrowsPointingOutIcon,
-  ComputerDesktopIcon,
-  DevicePhoneMobileIcon,
-} from "@heroicons/react/24/solid";
+// import {
+//   ArrowsPointingInIcon,
+//   ArrowsPointingOutIcon,
+//   ComputerDesktopIcon,
+//   DevicePhoneMobileIcon,
+// } from "@heroicons/react/24/solid";
 import { Variants, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
@@ -281,7 +281,7 @@ export default function PreviewSurvey({
             ) : (
               <div className="flex flex-grow flex-col overflow-y-auto rounded-b-lg" ref={ContentRef}>
                 <div className="flex w-full flex-grow flex-col items-center justify-center bg-white">
-                  <div className="w-full max-w-full">
+                  <div className="h-full w-full max-w-full">
                     <SurveyInline
                       survey={survey}
                       brandColor={brandColor}

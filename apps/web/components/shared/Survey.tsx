@@ -4,6 +4,7 @@ import { TResponseData, TResponseUpdate } from "@formbricks/types/v1/responses";
 import { TSurvey } from "@formbricks/types/v1/surveys";
 import { useEffect, useMemo } from "react";
 import ContentWrapper from "@/components/shared/ContentWrapper";
+import { useSearchParams } from "next/navigation";
 
 const createContainerId = () => `formbricks-survey-container`;
 
@@ -80,11 +81,14 @@ export const SurveyInline = ({
     activePageId,
     onActivePageChange,
   ]);
+  const searchParams = useSearchParams();
+  const isPreview = searchParams?.get("preview") === "true";
   return (
     <div
-      className="overflow-y-auto p-0"
+      className="h-full overflow-y-auto p-0"
       style={{
         background: `${survey?.styling?.background?.bg || "white"}`,
+        paddingTop: isPreview ? "40px" : 0,
       }}>
       <ContentWrapper className={`h-full w-full p-0 md:max-w-3xl`}>
         <div id={containerId} className="h-full w-full" />
