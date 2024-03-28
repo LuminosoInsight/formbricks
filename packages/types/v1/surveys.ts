@@ -315,6 +315,7 @@ export const ZSurvey = z.object({
   verifyEmail: ZSurveyVerifyEmail.nullable(),
   projects: z.array(z.string()).nullable(),
   styling: ZSurveyStyling.nullable().optional(),
+  projectExportCounter: z.number(),
 });
 
 export const ZSurveyInput = z.object({
@@ -339,6 +340,7 @@ export const ZSurveyInput = z.object({
   triggers: z.array(z.string()).optional(),
   projects: z.array(z.string()).nullable().optional(),
   styling: ZSurveyStyling.optional(),
+  projectExportCounter: z.number().optional(),
 });
 
 export type TSurvey = z.infer<typeof ZSurvey>;

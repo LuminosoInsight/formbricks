@@ -79,6 +79,7 @@ export const selectSurvey = {
   },
   pages: true,
   styling: true,
+  projectExportCounter: true,
 };
 
 export const selectSurveyWithAnalytics = {
