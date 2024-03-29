@@ -72,7 +72,7 @@
 }
 #fbjs a {
   color: inherit;
-  text-decoration: inherit;
+  text-decoration: underline;
 }
 #fbjs b,
 #fbjs strong {
@@ -209,12 +209,26 @@
 #fbjs legend {
   padding: 0;
 }
-#fbjs ol,
-#fbjs ul,
+/* #fbjs ol, */
+/* #fbjs ul, */
 #fbjs menu {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+#fbjs ol,
+#fbjs ul {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+}
+#fbjs ol {
+  list-style: decimal inside;
+}
+#fbjs ul {
+  list-style: disc inside;
 }
 #fbjs textarea {
   resize: vertical;
