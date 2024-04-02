@@ -3,6 +3,7 @@ import type { TResponseData } from "@formbricks/types/v1/responses.ts";
 import SubmitButton from "./SubmitButton.tsx";
 import { BackButton } from "./BackButton.tsx";
 import QuestionConditional from "./QuestionConditional.tsx";
+import SurveyPageHeader from "./SurveyPageHeader.tsx";
 
 type Props = {
   page: TSurveyPage;
@@ -41,6 +42,12 @@ const SurveyPage = ({
             onSubmit(responseData);
           }
       }}>
+      <SurveyPageHeader
+        pageId={page.id}
+        headline={page.headline}
+        subheader={page.subheader}
+        brandColor={brandColor}
+      />
       <div className="flex flex-col gap-6">
         {page.questions.map((question, idx) => (
           <QuestionConditional

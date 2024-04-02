@@ -248,7 +248,12 @@ export const ZSurveyQuestion = z.union([
 export type TSurveyQuestion = z.infer<typeof ZSurveyQuestion>;
 
 export const ZSurveyQuestions = z.array(ZSurveyQuestion);
-export const ZSurveyPage = z.object({ id: z.string(), questions: ZSurveyQuestions });
+export const ZSurveyPage = z.object({
+  id: z.string(),
+  headline: z.string().optional(),
+  subheader: z.string().optional(),
+  questions: ZSurveyQuestions,
+});
 export const ZSurveyPages = z.array(ZSurveyPage);
 
 export type TSurveyQuestions = z.infer<typeof ZSurveyQuestions>;
@@ -304,7 +309,7 @@ export const ZSurvey = z.object({
   redirectUrl: z.string().url().nullable(),
   recontactDays: z.number().nullable(),
   questions: ZSurveyQuestions,
-  pages: z.array(z.object({ id: z.string(), questions: ZSurveyQuestions })),
+  pages: z.array(ZSurveyPage),
   thankYouCard: ZSurveyThankYouCard,
   delay: z.number(),
   autoComplete: z.number().nullable(),
@@ -325,17 +330,17 @@ export const ZSurveyInput = z.object({
   image: z.string().nullable().optional(),
   status: ZSurveyStatus.optional(),
   displayOption: ZSurveyDisplayOption.optional(),
-  autoClose: z.number().optional(),
-  redirectUrl: z.string().url().optional(),
-  recontactDays: z.number().optional(),
+  autoClose: z.number().nullable().optional(),
+  redirectUrl: z.string().url().nullable().optional(),
+  recontactDays: z.number().nullable().optional(),
   questions: ZSurveyQuestions.optional(),
-  pages: z.array(z.object({ id: z.string(), questions: ZSurveyQuestions })).optional(),
+  pages: z.array(ZSurveyPage).optional(),
   thankYouCard: ZSurveyThankYouCard.optional(),
   delay: z.number().optional(),
-  autoComplete: z.number().optional(),
-  closeOnDate: z.date().optional(),
+  autoComplete: z.number().nullable().optional(),
+  closeOnDate: z.date().nullable().optional(),
   surveyClosedMessage: ZSurveyClosedMessage.optional(),
-  verifyEmail: ZSurveyVerifyEmail.optional(),
+  verifyEmail: ZSurveyVerifyEmail.nullable().optional(),
   attributeFilters: z.array(ZSurveyAttributeFilter).optional(),
   triggers: z.array(z.string()).optional(),
   projects: z.array(z.string()).nullable().optional(),
