@@ -8,10 +8,11 @@ import MultipleChoiceSingleQuestion from "./MultipleChoiceSingleQuestion";
 import NPSQuestion from "./NPSQuestion";
 import OpenTextQuestion from "./OpenTextQuestion";
 import RatingQuestion from "./RatingQuestion";
+import SurveyGridChoiceSingleQuestion from "./GridChoiceSingleQuestion";
 
 interface QuestionConditionalProps {
   question: TSurveyQuestion;
-  value: string | number | string[];
+  value: string | number | string[] | any;
   onChange: (responseData: TResponseData) => void;
   onSubmit: (data: TResponseData) => void;
   onBack: () => void;
@@ -108,6 +109,13 @@ export default function QuestionConditional({
       onBack={onBack}
       isFirstQuestion={isFirstQuestion}
       isLastQuestion={isLastQuestion}
+      brandColor={brandColor}
+    />
+  ) : question.type === "gridChoiceSingle" ? (
+    <SurveyGridChoiceSingleQuestion
+      question={question}
+      value={value}
+      onChange={onChange}
       brandColor={brandColor}
     />
   ) : null;

@@ -3,7 +3,9 @@ import { ZPerson, ZPersonAttributes } from "./people";
 import { ZSurvey } from "./surveys";
 import { ZTag } from "./tags";
 
-export const ZResponseData = z.record(z.union([z.string(), z.number(), z.array(z.string())]));
+export const ZResponseData = z.record(
+  z.union([z.string(), z.number(), z.array(z.string()), z.record(z.string())])
+);
 
 export type TResponseData = z.infer<typeof ZResponseData>;
 

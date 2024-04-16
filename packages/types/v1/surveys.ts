@@ -235,6 +235,14 @@ export const ZSurveyRatingQuestion = ZSurveyQuestionBase.extend({
 
 export type TSurveyRatingQuestion = z.infer<typeof ZSurveyRatingQuestion>;
 
+export const ZSurveyGridChoiceSingleQuestion = ZSurveyQuestionBase.extend({
+  type: z.literal(QuestionType.GridChoiceSingle),
+  rows: z.array(ZSurveyChoice),
+  choices: z.array(ZSurveyChoice),
+});
+
+export type TSurveyGridChoiceSingleQuestion = z.infer<typeof ZSurveyGridChoiceSingleQuestion>;
+
 export const ZSurveyQuestion = z.union([
   ZSurveyOpenTextQuestion,
   ZSurveyConsentQuestion,
@@ -243,6 +251,7 @@ export const ZSurveyQuestion = z.union([
   ZSurveyNPSQuestion,
   ZSurveyCTAQuestion,
   ZSurveyRatingQuestion,
+  ZSurveyGridChoiceSingleQuestion,
 ]);
 
 export type TSurveyQuestion = z.infer<typeof ZSurveyQuestion>;
@@ -309,7 +318,7 @@ export const ZSurvey = z.object({
   redirectUrl: z.string().url().nullable(),
   recontactDays: z.number().nullable(),
   questions: ZSurveyQuestions,
-  pages: z.array(ZSurveyPage),
+  pages: ZSurveyPages,
   thankYouCard: ZSurveyThankYouCard,
   delay: z.number(),
   autoComplete: z.number().nullable(),
@@ -334,7 +343,7 @@ export const ZSurveyInput = z.object({
   redirectUrl: z.string().url().nullable().optional(),
   recontactDays: z.number().nullable().optional(),
   questions: ZSurveyQuestions.optional(),
-  pages: z.array(ZSurveyPage).optional(),
+  pages: ZSurveyPages.optional(),
   thankYouCard: ZSurveyThankYouCard.optional(),
   delay: z.number().optional(),
   autoComplete: z.number().nullable().optional(),

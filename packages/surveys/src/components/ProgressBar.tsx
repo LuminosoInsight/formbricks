@@ -10,7 +10,7 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ survey, questionId, brandColor, pageId }: ProgressBarProps) {
-  const PROGRESS_INCREMENT = 1 / (survey.pages.length + 1);
+  const PROGRESS_INCREMENT = 0.1;
 
   const [progress, setProgress] = useState(0); // [0, 1]
   const [prevQuestionIdx, setPrevQuestionIdx] = useState(0); // [0, survey.questions.length
@@ -87,10 +87,10 @@ export default function ProgressBar({ survey, questionId, brandColor, pageId }: 
         return survey.pages.findIndex((e) => e.id === lastPage?.id);
       };
 
-      let elementIdx = currentPageIdx || 0.5;
+      let elementIdx = currentPageIdx;
       const lastprevPageIdx = getLastPageIndex();
 
-      if (lastprevPageIdx > 0) elementIdx = Math.min(middleIdx, lastprevPageIdx - 1);
+      // if (lastprevPageIdx > 0) elementIdx = Math.min(middleIdx, lastprevPageIdx - 1);
       // if (possibleNextQuestions.includes("end")) elementIdx = middleIdx;
 
       const newProgress = elementIdx / survey.pages.length;

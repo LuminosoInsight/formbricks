@@ -18,8 +18,8 @@ const PreviewPage = () => {
     const handleMessage = async (event) => {
       if (event.data.survey) {
         setSurvey(event.data.survey);
-        if (event.data.survey?.pages[0]?.id) {
-          setActiveQuestionId(event.data.survey?.pages[0]?.id);
+        if (event.data.selectedPage) {
+          setActiveQuestionId(event.data.selectedPage);
         }
       }
 

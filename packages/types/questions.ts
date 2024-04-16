@@ -11,6 +11,8 @@ export enum QuestionType {
   CTA = "cta",
   Rating = "rating",
   Consent = "consent",
+  GridChoiceSingle = "gridChoiceSingle",
+  GridChoiceMultiply = "gridChoiceMultiply",
 }
 
 export type Question =

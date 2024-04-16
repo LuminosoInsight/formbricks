@@ -289,6 +289,8 @@ export default function PreviewSurvey({
                       formbricksSignature={product.formbricksSignature}
                       onActiveQuestionChange={setActiveQuestionId}
                       isRedirectDisabled={true}
+                      activePageId={activeQuestionId || undefined}
+                      onActivePageChange={setActiveQuestionId}
                     />
                   </div>
                 </div>
