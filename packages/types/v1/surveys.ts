@@ -386,3 +386,10 @@ export const ZSurveyQuestionType = z.union([
 ]);
 
 export type TSurveyQuestionType = z.infer<typeof ZSurveyQuestionType>;
+
+export const ZGetSurveysParams = z.object({
+  page: z.string().nullable(),
+  publicity: z.string().nullable(),
+});
+
+export type TGetSurveysParams = z.infer<typeof ZGetSurveysParams>;

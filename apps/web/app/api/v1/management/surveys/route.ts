@@ -12,10 +12,13 @@ export async function GET(request: Request) {
     const url = new URL(requestUrl);
     const searchParams = new URLSearchParams(url.search);
     const page = searchParams.get("page");
+    const publicity = searchParams.get("publicity");
+
+    const params = { page, publicity };
 
     const authentication = await authenticateRequest(request);
     if (!authentication) return responses.notAuthenticatedResponse();
-    const surveys = await getSurveys(authentication.environmentId!, page);
+    const surveys = await getSurveys(authentication.environmentId!, params);
     return responses.successResponse(surveys);
   } catch (error) {
     if (error instanceof DatabaseError) {

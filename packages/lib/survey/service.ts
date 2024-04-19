@@ -10,6 +10,7 @@ import {
   ZSurvey,
   ZSurveyWithAnalytics,
   TSurveyInput,
+  TGetSurveysParams,
 } from "@formbricks/types/v1/surveys";
 import { Prisma } from "@prisma/client";
 import { revalidateTag, unstable_cache } from "next/cache";
@@ -384,18 +385,43 @@ export const getSurveysByActionClassId = async (actionClassId: string): Promise<
   }
 };
 
-export const getSurveys = async (environmentId: string, page: string | null): Promise<TSurvey[]> => {
+export const getSurveys = async (environmentId: string, params: TGetSurveysParams): Promise<TSurvey[]> => {
+  const cacheKey = `environments-${environmentId}-surveys-${params.publicity}`;
   const surveys = await unstable_cache(
     async () => {
       validateInputs([environmentId, ZId]);
       let surveysPrisma;
       try {
+        let filters: Prisma.SurveyFindManyArgs["where"] = {
+          environmentId,
+        };
+
+        if (params.publicity) {
+          if (params.publicity === "all") {
+            filters = {
+              OR: [
+                {
+                  environmentId,
+                },
+                {
+                  isPublic: true,
+                },
+              ],
+            };
+          }
+          if (params.publicity === "public") {
+            filters = {
+              isPublic: true,
+            };
+          }
+        }
+
         surveysPrisma = await prisma.survey.findMany({
           where: {
-            environmentId,
+            ...filters,
           },
-          skip: page ? (+page - 1) * 10 : 0,
-          take: page ? 10 : undefined,
+          skip: params.page ? (+params.page - 1) * 10 : 0,
+          take: params.page ? 10 : undefined,
           select: selectSurvey,
           orderBy: {
             createdAt: "desc",
@@ -434,7 +460,7 @@ export const getSurveys = async (environmentId: string, page: string | null): Pr
         throw new ValidationError("Data validation of survey failed");
       }
     },
-    [`environments-${environmentId}-surveys`],
+    [cacheKey],
     {
       tags: [getSurveysCacheTag(environmentId)],
       revalidate: SERVICES_REVALIDATION_INTERVAL,
