@@ -81,6 +81,7 @@ export const selectSurvey = {
   pages: true,
   styling: true,
   projectExportCounter: true,
+  isPublic: true,
 };
 
 export const selectSurveyWithAnalytics = {

@@ -330,6 +330,7 @@ export const ZSurvey = z.object({
   projects: z.array(z.string()).nullable(),
   styling: ZSurveyStyling.nullable().optional(),
   projectExportCounter: z.number(),
+  isPublic: z.boolean().optional(),
 });
 
 export const ZSurveyInput = z.object({
@@ -355,6 +356,7 @@ export const ZSurveyInput = z.object({
   projects: z.array(z.string()).nullable().optional(),
   styling: ZSurveyStyling.optional(),
   projectExportCounter: z.number().optional(),
+  isPublic: z.boolean().optional(),
 });
 
 export type TSurvey = z.infer<typeof ZSurvey>;
