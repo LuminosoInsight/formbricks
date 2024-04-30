@@ -7,16 +7,16 @@ import { env } from "@/env.mjs";
 
 const AWS_BUCKET_NAME = env.S3_BUCKET_NAME!;
 const AWS_REGION = env.S3_REGION!;
-const AWS_ACCESS_KEY = env.AWS_ACCESS_KEY!;
-const AWS_SECRET_KEY = env.AWS_SECRET_KEY!;
+// const AWS_ACCESS_KEY = env.AWS_ACCESS_KEY!;
+// const AWS_SECRET_KEY = env.AWS_SECRET_KEY!;
 
 // S3Client Singleton
 
 const s3Client = new S3Client({
-  credentials: {
-    accessKeyId: AWS_ACCESS_KEY,
-    secretAccessKey: AWS_SECRET_KEY!,
-  },
+  // credentials: {
+  //   accessKeyId: AWS_ACCESS_KEY,
+  //   secretAccessKey: AWS_SECRET_KEY!,
+  // },
   region: AWS_REGION!,
 });
 
@@ -85,11 +85,11 @@ export const getFileFromLocalStorage = async (filePath: string): Promise<TGetFil
 
 export const putFileToS3 = async (
   fileName: string,
-  contentType: string,
   fileBuffer: Buffer,
   accessType: string,
   environmentId: string,
-  isPublic: boolean = false
+  isPublic: boolean = false,
+  contentType?: string
 ) => {
   try {
     const buffer = Buffer.from(fileBuffer);
@@ -112,7 +112,7 @@ export const putFileToS3 = async (
       Bucket: AWS_BUCKET_NAME,
       Key: `${environmentId}/${accessType}/${fileName}`,
       Body: buffer,
-      ContentType: contentType,
+      // ContentType: contentType,
     });
 
     await s3Client.send(putObjectCommand);
