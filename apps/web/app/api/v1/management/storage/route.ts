@@ -68,6 +68,8 @@ const uploadPublicFile = async (
 
   if (!env.S3_REGION || !env.S3_BUCKET_NAME) {
     try {
+      console.log("uploading to local storage");
+
       await putFileToLocalStorage(fileName, fileBuffer, accessType, environmentId, UPLOADS_DIR, true);
 
       return responses.successResponse({
@@ -87,7 +89,7 @@ const uploadPublicFile = async (
     // if (!contentType) {
     //   return responses.badRequestResponse("contentType is required");
     // }
-
+    console.log("uploading to AWS S3");
     await putFileToS3(fileName, fileBuffer, accessType, environmentId, true, contentType);
 
     return responses.successResponse({
