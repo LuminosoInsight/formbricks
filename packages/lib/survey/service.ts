@@ -415,6 +415,11 @@ export const getSurveys = async (environmentId: string, params: TGetSurveysParam
               isPublic: true,
             };
           }
+          if (params.publicity === "private") {
+            filters = {
+              isPublic: false,
+            };
+          }
         }
 
         surveysPrisma = await prisma.survey.findMany({
