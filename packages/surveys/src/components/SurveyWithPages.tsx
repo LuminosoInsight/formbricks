@@ -1,7 +1,7 @@
 import type { TResponseData } from "@formbricks/types/v1/responses";
 import { useEffect, useRef, useState } from "preact/hooks";
 // import { evaluateCondition } from "../lib/logicEvaluator";
-import { cn } from "../lib/utils";
+import { cn, isLight } from "../lib/utils";
 import { SurveyBaseProps } from "../types/props";
 import { AutoCloseWrapper } from "./AutoCloseWrapper";
 // import FormbricksSignature from "./FormbricksSignature";
@@ -11,6 +11,14 @@ import ThankYouCard from "./ThankYouCard";
 import SurveyHeadline from "./SurveyHeadline";
 import Subheader from "./Subheader";
 import SurveyPage from "./SurveyPage.tsx";
+import Modal from "./Modal.tsx";
+import { BackButton } from "./BackButton.tsx";
+
+type TSavedResponse = {
+  data: TResponseData;
+  date: Date;
+  pageId: string;
+};
 
 export function SurveyWithPages({
   survey,
@@ -31,9 +39,33 @@ export function SurveyWithPages({
   const [loadingElement, setLoadingElement] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [responseData, setResponseData] = useState<TResponseData>({});
+  const [saveResponseModalOpen, setSavedResponseModalOpen] = useState<boolean>(false);
   const currentPageIndex = survey.pages.findIndex((p) => p.id === pageId);
   // const currentPage = survey.pages[currentPageIndex];
   const contentRef = useRef<HTMLDivElement | null>(null);
+
+  const savedResponse = localStorage.getItem("savedResponse");
+
+  useEffect(() => {
+    if (savedResponse) {
+      setSavedResponseModalOpen(true);
+      const { data, pageId } = JSON.parse(savedResponse) as TSavedResponse;
+      setResponseData(data);
+      onActivePageChange(pageId);
+    }
+  }, []);
+
+  const closeSavedResponseModalHandler = () => {
+    setSavedResponseModalOpen(false);
+  };
+
+  const startOverHandler = () => {
+    setResponseData({});
+    localStorage.removeItem("savedResponse");
+    setPageId(survey.pages[0]?.id);
+    setSavedResponseModalOpen(false);
+    window.location.reload();
+  };
 
   useEffect(() => {
     setPageId(activePageId || survey.pages[0].id);
@@ -74,6 +106,10 @@ export function SurveyWithPages({
   const onChange = (responseDataUpdate: TResponseData) => {
     const updatedResponseData = { ...responseData, ...responseDataUpdate };
     setResponseData(updatedResponseData);
+    localStorage.setItem(
+      "savedResponse",
+      JSON.stringify({ data: updatedResponseData, date: new Date(), pageId })
+    );
   };
 
   const onSubmit = (responseData: TResponseData) => {
@@ -110,6 +146,52 @@ export function SurveyWithPages({
 
   return (
     <>
+      <Modal
+        isOpen={saveResponseModalOpen}
+        placement="center"
+        clickOutside={false}
+        darkOverlay={true}
+        highlightBorderColor={brandColor || survey?.productOverwrites?.brandColor || null}
+        onClose={closeSavedResponseModalHandler}>
+        <div className="p-5">
+          <p className="text-center font-medium">
+            Would you like to{" "}
+            <span
+              className="font-black"
+              style={{
+                color: brandColor || survey?.productOverwrites?.brandColor,
+              }}>
+              continue
+            </span>{" "}
+            taking the survey or{" "}
+            <span
+              className="font-black"
+              style={{
+                color: brandColor || survey?.productOverwrites?.brandColor,
+              }}>
+              start over
+            </span>
+            ?
+          </p>
+          <div className="mt-8 flex justify-between">
+            <BackButton
+              backButtonLabel="Continue"
+              onClick={closeSavedResponseModalHandler}
+              className="border-inherit"
+            />
+            <button
+              type="button"
+              onClick={startOverHandler}
+              className={cn(
+                "flex items-center rounded-md border border-transparent px-3 py-3 text-base font-medium leading-4 shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2",
+                isLight(brandColor) ? "text-black" : "text-white"
+              )}
+              style={{ backgroundColor: brandColor }}>
+              Start Over
+            </button>
+          </div>
+        </div>
+      </Modal>
       <AutoCloseWrapper survey={survey} brandColor={brandColor} onClose={onClose}>
         <div className="flex h-full w-full flex-col justify-between bg-[transparent] px-6 pb-3 pt-6">
           <div ref={contentRef} className={cn(loadingElement ? "animate-pulse opacity-60" : "", "my-auto")}>
