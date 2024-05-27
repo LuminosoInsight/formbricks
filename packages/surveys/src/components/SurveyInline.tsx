@@ -14,10 +14,12 @@ export function SurveyInline({
   isRedirectDisabled = false,
   onActivePageChange = () => {},
   activePageId,
+  isPreview,
 }: SurveyBaseProps) {
   return (
     <div id="fbjs" className="h-full w-full">
       <SurveyWithPages
+        isPreview={isPreview}
         survey={survey}
         brandColor={brandColor}
         formbricksSignature={formbricksSignature}

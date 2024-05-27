@@ -4,7 +4,6 @@ import { TResponseData, TResponseUpdate } from "@formbricks/types/v1/responses";
 import { TSurvey } from "@formbricks/types/v1/surveys";
 import { useEffect, useMemo } from "react";
 import ContentWrapper from "@/components/shared/ContentWrapper";
-import { useSearchParams } from "next/navigation";
 
 const createContainerId = () => `formbricks-survey-container`;
 
@@ -23,6 +22,7 @@ interface SurveyProps {
   isRedirectDisabled?: boolean;
   activePageId?: string;
   onActivePageChange?: (pageId: string) => void;
+  isPreview?: boolean;
 }
 
 interface SurveyModalProps extends SurveyProps {
@@ -46,8 +46,10 @@ export const SurveyInline = ({
   isRedirectDisabled,
   onActivePageChange = () => {},
   activePageId,
+  isPreview,
 }: SurveyProps) => {
   const containerId = useMemo(() => createContainerId(), []);
+
   useEffect(() => {
     renderSurveyInline({
       survey,
@@ -64,6 +66,7 @@ export const SurveyInline = ({
       isRedirectDisabled,
       activePageId,
       onActivePageChange,
+      isPreview,
     });
   }, [
     activeQuestionId,
@@ -80,9 +83,8 @@ export const SurveyInline = ({
     isRedirectDisabled,
     activePageId,
     onActivePageChange,
+    isPreview,
   ]);
-  const searchParams = useSearchParams();
-  const isPreview = searchParams?.get("preview") === "true";
   return (
     <div
       className="h-full overflow-y-auto p-0"

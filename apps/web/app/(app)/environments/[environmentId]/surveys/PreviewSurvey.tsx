@@ -202,6 +202,7 @@ export default function PreviewSurvey({
                   <SurveyInline
                     survey={survey}
                     brandColor={brandColor}
+                    isPreview={true}
                     activeQuestionId={activeQuestionId || undefined}
                     formbricksSignature={product.formbricksSignature}
                     onActiveQuestionChange={setActiveQuestionId}
@@ -216,6 +217,7 @@ export default function PreviewSurvey({
                     <div className="w-full max-w-md px-4">
                       <SurveyInline
                         survey={survey}
+                        isPreview={true}
                         brandColor={brandColor}
                         activeQuestionId={activeQuestionId || undefined}
                         formbricksSignature={product.formbricksSignature}
@@ -291,6 +293,7 @@ export default function PreviewSurvey({
                       isRedirectDisabled={true}
                       activePageId={activeQuestionId || undefined}
                       onActivePageChange={setActiveQuestionId}
+                      isPreview={true}
                     />
                   </div>
                 </div>

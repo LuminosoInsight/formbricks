@@ -16,6 +16,7 @@ export interface SurveyBaseProps {
   autoFocus?: boolean;
   isRedirectDisabled?: boolean;
   prefillResponseData?: TResponseData;
+  isPreview?: boolean;
 }
 
 export interface SurveyInlineProps extends SurveyBaseProps {

@@ -34,6 +34,7 @@ export function SurveyWithPages({
   onFinished = () => {},
   isRedirectDisabled = false,
   prefillResponseData,
+  isPreview,
 }: SurveyBaseProps) {
   const [pageId, setPageId] = useState(activePageId || survey.pages[0]?.id);
   const [loadingElement, setLoadingElement] = useState(false);
@@ -47,7 +48,7 @@ export function SurveyWithPages({
   const savedResponse = localStorage.getItem("savedResponse");
 
   useEffect(() => {
-    if (savedResponse) {
+    if (savedResponse && !isPreview) {
       setSavedResponseModalOpen(true);
       const { data, pageId } = JSON.parse(savedResponse) as TSavedResponse;
       setResponseData(data);
@@ -106,10 +107,12 @@ export function SurveyWithPages({
   const onChange = (responseDataUpdate: TResponseData) => {
     const updatedResponseData = { ...responseData, ...responseDataUpdate };
     setResponseData(updatedResponseData);
-    localStorage.setItem(
-      "savedResponse",
-      JSON.stringify({ data: updatedResponseData, date: new Date(), pageId })
-    );
+    if (!isPreview) {
+      localStorage.setItem(
+        "savedResponse",
+        JSON.stringify({ data: updatedResponseData, date: new Date(), pageId })
+      );
+    }
   };
 
   const onSubmit = (responseData: TResponseData) => {
