@@ -53,7 +53,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
         run: |
-          docker build  --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest -f ./apps/web/Dockerfile 
+          docker build  --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest -f ./apps/web/Dockerfile .
           docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
           docker rmi $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
   deploy:
