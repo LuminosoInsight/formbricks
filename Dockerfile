@@ -1,8 +1,8 @@
 FROM node:18-alpine AS installer
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+# ARG DATABASE_URL
+# ENV DATABASE_URL=$DATABASE_URL
 
 # ARG NEXTAUTH_SECRET
 # ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
