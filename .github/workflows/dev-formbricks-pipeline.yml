@@ -46,6 +46,7 @@ jobs:
         run: |
           aws secretsmanager get-secret-value --secret-id ${{env.SECRET_NAME}} --region ${{ env.AWS_REGION }} --query 'SecretString' --output json | jq -r '. | if type=="string" then fromjson else . end | to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
           cat .env
+          grep 'DATABASE_URL' .env
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
       - name: Build, tag, and push image to AWS ECR
