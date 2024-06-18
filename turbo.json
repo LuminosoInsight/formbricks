@@ -33,7 +33,6 @@
         "FORMBRICKS_ENCRYPTION_KEY",
         "DEBUG",
         "GITHUB_ID",
-        "DATABASE_URL",
         "GITHUB_SECRET",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
