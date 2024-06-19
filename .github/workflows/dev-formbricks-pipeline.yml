@@ -42,13 +42,11 @@ jobs:
       - name: Login to AWS ECR
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v1
-      # - name: Retrieve environment variables from Secrets Manager
-      #   run: |
-      #     aws secretsmanager get-secret-value --secret-id ${{env.SECRET_NAME}} --region ${{ env.AWS_REGION }} --query 'SecretString' --output json | jq -r '. | if type=="string" then fromjson else . end | to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
-      #     cat .env
-      #     grep 'DATABASE_URL' .env
-      #   env:
-      #     AWS_REGION: ${{ env.AWS_REGION }}
+      - name: Retrieve environment variables from Secrets Manager
+        run: |
+          aws secretsmanager get-secret-value --secret-id ${{env.SECRET_NAME}} --region ${{ env.AWS_REGION }} --query 'SecretString' --output json | jq -r '. | if type=="string" then fromjson else . end | to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
       - name: Build, tag, and push image to AWS ECR
         id: build_image
         env:
