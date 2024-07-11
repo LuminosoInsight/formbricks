@@ -17,16 +17,6 @@ export async function POST(
     const apiKey = request.headers.get("x-api-key");
     const authentication = await authenticateRequest(request);
     if (!authentication) return responses.notAuthenticatedResponse();
-    const surveyInput = await request.json();
-    const inputValidation = ZSurveyInput.safeParse(surveyInput);
-
-    if (!inputValidation.success) {
-      return responses.badRequestResponse(
-        "Fields are missing or incorrectly formatted",
-        transformErrorToDetails(inputValidation.error),
-        true
-      );
-    }
 
     let survey = await fetchAndAuthorizeSurvey(authentication, params.surveyId);
     if (!survey) return responses.notFoundResponse("Survey", params.surveyId);
