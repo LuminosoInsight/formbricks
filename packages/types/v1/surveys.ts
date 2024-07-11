@@ -357,7 +357,7 @@ export const ZSurveyInput = z.object({
   styling: ZSurveyStyling.optional(),
   projectExportCounter: z.number().optional(),
   isPublic: z.boolean().optional(),
-  createDaylightProject: z.boolean().optional(),
+  createProject: z.boolean().optional(),
 });
 
 export type TSurvey = z.infer<typeof ZSurvey>;

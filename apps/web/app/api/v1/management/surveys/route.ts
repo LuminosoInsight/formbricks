@@ -72,11 +72,11 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     const environmentId = authentication.environmentId;
-    const { createDaylightProject, ...rest } = inputValidation.data;
+    const { createProject, ...rest } = inputValidation.data;
     const surveyData = { ...rest, environmentId: undefined };
 
     let survey = await createSurvey(environmentId, { ...surveyData });
-    if (createDaylightProject) {
+    if (createProject) {
       const daylightProject = await createDaylightProject(apiKey!, {
         name: `Survey - ${survey.name}`,
         language: "en",
