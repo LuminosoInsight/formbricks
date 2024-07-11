@@ -9,7 +9,7 @@ import { LUMI_API_URL } from "@formbricks/lib/constants";
 import { TDaylightProject, TDaylightProjectCreate } from "@formbricks/types/v1/daylight";
 import * as console from "node:console";
 
-async function createDaylightProject(
+export async function createDaylightProject(
   token: string,
   projectData: TDaylightProjectCreate
 ): Promise<TDaylightProject | NextResponse> {
@@ -72,25 +72,28 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     const environmentId = authentication.environmentId;
-    const surveyData = { ...inputValidation.data, environmentId: undefined };
+    const { createDaylightProject, ...rest } = inputValidation.data;
+    const surveyData = { ...rest, environmentId: undefined };
 
     let survey = await createSurvey(environmentId, { ...surveyData });
-    const daylightProject = await createDaylightProject(apiKey!, {
-      name: `Survey - ${survey.name}`,
-      language: "en",
-    });
-    if (daylightProject) {
-      const surveyData = { ...survey, projects: [daylightProject.project_id] };
-      const inputValidation = ZSurvey.safeParse(surveyData);
-      if (!inputValidation.success) {
-        return responses.badRequestResponse(
-          "Fields are missing or incorrectly formatted",
-          transformErrorToDetails(inputValidation.error)
-        );
+    if (createDaylightProject) {
+      const daylightProject = await createDaylightProject(apiKey!, {
+        name: `Survey - ${survey.name}`,
+        language: "en",
+      });
+      if (daylightProject) {
+        const surveyData = { ...survey, projects: [daylightProject.project_id] };
+        const inputValidation = ZSurvey.safeParse(surveyData);
+        if (!inputValidation.success) {
+          return responses.badRequestResponse(
+            "Fields are missing or incorrectly formatted",
+            transformErrorToDetails(inputValidation.error)
+          );
+        }
+        survey = await updateSurvey(inputValidation.data);
+      } else {
+        console.error("Daylight project creation failed!");
       }
-      survey = await updateSurvey(inputValidation.data);
-    } else {
-      console.error("Daylight project creation failed!");
     }
     return responses.successResponse(survey);
   } catch (error) {

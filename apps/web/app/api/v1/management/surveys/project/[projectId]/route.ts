@@ -19,23 +19,6 @@ export async function fetchAndAuthorizeSurvey(
   return survey;
 }
 
-// export async function GET(
-// request: Request,
-// { params }: { params: { projectId: string } }
-// ): Promise<NextResponse> {
-// try {
-//     const authentication = await authenticateRequest(request);
-//     if (!authentication) return responses.notAuthenticatedResponse();
-//     const survey = await fetchAndAuthorizeSurvey(authentication, params.projectId);
-//     if (survey) {
-//     return responses.successResponse(survey);
-//     }
-//     return responses.notFoundResponse("Survey", params.projectId);
-// } catch (error) {
-//     return handleErrorResponse(error);
-// }
-// }
-
 export async function GET(
   request: Request,
   { params }: { params: { projectId: string } }
