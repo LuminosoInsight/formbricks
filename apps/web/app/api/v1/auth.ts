@@ -76,6 +76,7 @@ export async function authenticateRequest(request: Request): Promise<TAuthentica
         environmentId: existedUser?.memberships[0].team.products[0].environments.find(
           (item: Record<string, string>) => item.type === "production"
         ).id,
+        daylightUser: existedUser,
       };
     }
     return null;

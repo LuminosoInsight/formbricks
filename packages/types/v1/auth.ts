@@ -5,15 +5,16 @@ const ZAuthSession = z.object({
   user: ZProfile,
 });
 
-const ZAuthenticationApiKey = z.object({
-  type: z.literal("apiKey"),
-  environmentId: z.string(),
-});
-
 const ZDaylightUser = z.object({
   username: z.string(),
   full_name: z.string(),
   global_permissions: z.array(z.string()),
+});
+
+const ZAuthenticationApiKey = z.object({
+  type: z.literal("apiKey"),
+  environmentId: z.string(),
+  daylightUser: ZDaylightUser,
 });
 
 export type TDaylightUser = z.infer<typeof ZDaylightUser>;
